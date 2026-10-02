@@ -1,0 +1,539 @@
+ <!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>講師培訓報名表</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;       /* 沉穩藏藍 */
+      --primary-hover: #1e40af;
+      --accent: #2563eb;
+      --bg: #f8fafc;            /* 極淡灰底 */
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --text-main: #1e293b;
+      --text-sub: #64748b;
+      --radius: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      padding: 24px 16px 60px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* 頂部標題區 */
+    .header-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+    }
+
+    /* 講師資料卡片 */
+    .instructor-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* 表單網格系統 */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .full-width {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 16px 12px 40px; }
+      .header-card, .instructor-card { padding: 18px 14px; }
+      .form-grid { grid-template-columns: 1fr; gap: 14px; }
+      .full-width { grid-column: span 1; }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label.field-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    label.field-label span.req {
+      color: #e11d48;
+      margin-left: 2px;
+    }
+
+    /* 輸入框美化 (防止 iOS 縮放需大於等於 16px) */
+    input[type="text"], input[type="tel"], input[type="date"] {
+      width: 100%;
+      height: 44px;
+      padding: 0 12px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 16px;
+      background: #fff;
+      color: var(--text-main);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input[type="text"]:focus, input[type="tel"]:focus, input[type="date"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    /* 膠囊式選單 (觸控好按) */
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 6px 14px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 0.92rem;
+      color: #475569;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+
+    .chip-label input {
+      display: none;
+    }
+
+    .chip-label:has(input:checked) {
+      background: #eff6ff;
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* 「同上一位」勾選盒 */
+    .copy-box {
+      background: #f8fafc;
+      border: 1px dashed #94a3b8;
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .copy-box input {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    /* 按鈕樣式 */
+    .btn-add {
+      width: 100%;
+      height: 48px;
+      background: #ffffff;
+      border: 2px dashed #94a3b8;
+      border-radius: var(--radius);
+      color: #475569;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-add:hover {
+      background: #f1f5f9;
+      border-color: #64748b;
+    }
+
+    .btn-del {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-submit {
+      width: 100%;
+      height: 50px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(30, 58, 138, 0.15);
+      transition: background 0.2s, transform 0.05s;
+    }
+
+    .btn-submit:active {
+      transform: scale(0.99);
+    }
+
+    .btn-submit:disabled {
+      background: #94a3b8;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    #status {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-card">
+    <h1>講師培訓報名表</h1>
+    <div class="subtitle">請填寫完整資訊以利後續班程與師資安排</div>
+    
+    <div class="form-group">
+      <label class="field-label">報名形式</label>
+      <div class="chip-group">
+        <label class="chip-label">
+          <input type="radio" name="regMode" value="single" checked onchange="switchMode()"> 講師本人自行報名
+        </label>
+        <label class="chip-label">
+          <input type="radio" name="regMode" value="group" onchange="switchMode()"> 單位代報多位講師
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <form id="mainForm">
+    <div id="instructorsContainer"></div>
+
+    <button type="button" id="btnAddInstructor" class="btn-add" style="display:none;" onclick="addInstructorCard()">＋ 新增下一位講師</button>
+    <button type="submit" id="btnSubmit" class="btn-submit">確認並送出報名</button>
+    <div id="status"></div>
+  </form>
+</div>
+
+<script>
+  // 請替換為你的 Google Apps Script Web App URL (https://script.google.com/macros/s/AKfycbxN-haI0M8s9J-ZZ4uXjkFK3KZ_DqPwQ7knQvZo4UTDIfApSJIOWfA7UaM9eBL0ig68/exec)
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxN-haI0M8s9J-ZZ4uXjkFK3KZ_DqPwQ7knQvZo4UTDIfApSJIOWfA7UaM9eBL0ig68/exec';
+
+  const COURSE_OPTIONS = ['明德班', '新民班', '至善班', '無講授經驗'];
+
+  let instructorCounter = 0;
+
+  function createCardHTML(uid, displayIndex) {
+    const isFirst = displayIndex === 1;
+    return `
+      <div class="instructor-card" id="card-${uid}">
+        <div class="card-header">
+          <div class="card-title">講師 <span class="card-num">${displayIndex}</span> 基本資料</div>
+          ${!isFirst ? `<button type="button" class="btn-del" onclick="removeInstructorCard('${uid}')">刪除</button>` : ''}
+        </div>
+
+        ${!isFirst ? `
+          <label class="copy-box">
+            <input type="checkbox" onchange="toggleCopyPrevious(this)">
+            同上一位資料（單位、經理、類別、公壇、地點）
+          </label>
+        ` : ''}
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="field-label">姓名<span class="req">*</span></label>
+            <input type="text" class="field-name" placeholder="請輸入姓名" required>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label">性別<span class="req">*</span></label>
+            <div class="chip-group">
+              <label class="chip-label"><input type="radio" name="gender_${uid}" value="乾" required> 乾 </label>
+              <label class="chip-label"><input type="radio" name="gender_${uid}" value="坤"> 坤 </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label">出生年次<span class="req">*</span></label>
+            <input type="text" class="field-birthYear" placeholder="例：75 或 1986" maxlength="4" inputmode="numeric" required>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label">領命日期<span class="req">*</span></label>
+            <input type="date" class="field-appointedDate" required>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="field-label">師資類別<span class="req">*</span></label>
+            <div class="chip-group">
+              <label class="chip-label"><input type="radio" name="category_${uid}" value="推薦講師" required> 推薦講師</label>
+              <label class="chip-label"><input type="radio" name="category_${uid}" value="操持講師"> 操持講師</label>
+              <label class="chip-label"><input type="radio" name="category_${uid}" value="個別講師"> 個別講師</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label">所屬單位<span class="req">*</span></label>
+            <input type="text" class="field-unit" placeholder=" " required>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label">所屬經理<span class="req">*</span></label>
+            <input type="text" class="field-manager" placeholder="請輸入經理姓名" required>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label">設班公壇<span class="req">*</span></label>
+            <input type="text" class="field-altar" placeholder="請輸入公壇名稱" required>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label">培訓地點<span class="req">*</span></label>
+            <div class="chip-group">
+              <label class="chip-label"><input type="radio" name="location_${uid}" value="靈隱寺" required> 靈隱寺</label>
+              <label class="chip-label"><input type="radio" name="location_${uid}" value="武聖宮"> 武聖宮</label>
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="field-label">曾經講授過之中心班程 (可多選)</label>
+            <div class="chip-group">
+              ${COURSE_OPTIONS.map(c => `
+                <label class="chip-label"><input type="checkbox" name="courses_${uid}" value="${c}"> ${c}</label>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label">電話(手機)<span class="req">*</span></label>
+            <input type="tel" class="field-mobile" placeholder="09xxxxxxxx" pattern="09[0-9]{8}" maxlength="10" required title="請輸入09開頭的10位手機號碼">
+          </div>
+
+          <div class="form-group">
+            <label class="field-label">電話(市話)</label>
+            <input type="tel" class="field-tel" placeholder="02-xxxxxxxx">
+          </div>
+
+          <div class="form-group full-width">
+            <label class="field-label">通訊地址<span class="req">*</span></label>
+            <input type="text" class="field-address" placeholder="請輸入可收取通知的地址" required>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function reorderCardTitles() {
+    const cards = document.querySelectorAll('.instructor-card');
+    cards.forEach((card, index) => {
+      const numSpan = card.querySelector('.card-num');
+      if (numSpan) numSpan.innerText = index + 1;
+    });
+  }
+
+  function addInstructorCard() {
+    cardUniqueId++;
+    const container = document.getElementById('instructorsContainer');
+    const currentCount = container.querySelectorAll('.instructor-card').length + 1;
+    const div = document.createElement('div');
+    div.innerHTML = createCardHTML(cardUniqueId, currentCount);
+    container.appendChild(div.firstElementChild);
+  }
+
+  function removeInstructorCard(uid) {
+    const card = document.getElementById(`card-${uid}`);
+    if (card) {
+      card.remove();
+      reorderCardTitles();
+    }
+  }
+
+  function switchMode() {
+    const mode = document.querySelector('input[name="regMode"]:checked').value;
+    const btnAdd = document.getElementById('btnAddInstructor');
+    const container = document.getElementById('instructorsContainer');
+    
+    container.innerHTML = '';
+    cardUniqueId = 0;
+
+    if (mode === 'single') {
+      btnAdd.style.display = 'none';
+      addInstructorCard();
+    } else {
+      btnAdd.style.display = 'block';
+      addInstructorCard();
+    }
+  }
+
+  function toggleCopyPrevious(checkboxEl) {
+    const currentCard = checkboxEl.closest('.instructor-card');
+    const prevCard = currentCard.previousElementSibling;
+    if (!prevCard || !prevCard.classList.contains('instructor-card')) return;
+
+    if (checkboxEl.checked) {
+      currentCard.querySelector('.field-unit').value = prevCard.querySelector('.field-unit').value;
+      currentCard.querySelector('.field-manager').value = prevCard.querySelector('.field-manager').value;
+      currentCard.querySelector('.field-altar').value = prevCard.querySelector('.field-altar').value;
+
+      const prevCat = prevCard.querySelector('input[name^="category_"]:checked');
+      if (prevCat) {
+        const targetRadio = currentCard.querySelector(`input[name^="category_"][value="${prevCat.value}"]`);
+        if (targetRadio) targetRadio.checked = true;
+      }
+
+      const prevLoc = prevCard.querySelector('input[name^="location_"]:checked');
+      if (prevLoc) {
+        const targetRadio = currentCard.querySelector(`input[name^="location_"][value="${prevLoc.value}"]`);
+        if (targetRadio) targetRadio.checked = true;
+      }
+    }
+  }
+
+  switchMode();
+
+  document.getElementById('mainForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btnSubmit = document.getElementById('btnSubmit');
+    const status = document.getElementById('status');
+    const mode = document.querySelector('input[name="regMode"]:checked').value;
+
+    const cards = document.querySelectorAll('.instructor-card');
+    const instructors = [];
+
+    cards.forEach(card => {
+      const uid = card.id.replace('card-', '');
+      const courses = Array.from(card.querySelectorAll(`input[name="courses_${uid}"]:checked`)).map(cb => cb.value);
+      const genderEl = card.querySelector(`input[name="gender_${uid}"]:checked`);
+      const catEl = card.querySelector(`input[name="category_${uid}"]:checked`);
+      const locEl = card.querySelector(`input[name="location_${uid}"]:checked`);
+
+      instructors.push({
+        name: card.querySelector('.field-name').value.trim(),
+        gender: genderEl ? genderEl.value : '',
+        birthYear: card.querySelector('.field-birthYear').value.trim(),
+        appointedDate: card.querySelector('.field-appointedDate').value,
+        category: catEl ? catEl.value : '',
+        unit: card.querySelector('.field-unit').value.trim(),
+        manager: card.querySelector('.field-manager').value.trim(),
+        altar: card.querySelector('.field-altar').value.trim(),
+        location: locEl ? locEl.value : '',
+        courses: courses,
+        mobile: card.querySelector('.field-mobile').value.trim(),
+        tel: card.querySelector('.field-tel').value.trim(),
+        address: card.querySelector('.field-address').value.trim()
+      });
+    });
+
+    btnSubmit.disabled = true;
+    btnSubmit.innerText = '資料傳送中，請稍候...';
+    status.innerText = '';
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ mode: mode, instructors: instructors })
+      });
+
+      alert(`報名成功！已完成 ${instructors.length} 位講師資料登記。`);
+      document.getElementById('mainForm').reset();
+      switchMode();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      status.innerText = '報名失敗，請檢查網路連線或稍後再試。';
+      status.style.color = '#b91c1c';
+    } finally {
+      btnSubmit.disabled = false;
+      btnSubmit.innerText = '確認並送出報名';
+    }
+  });
+</script>
+
+</body>
+</html>
