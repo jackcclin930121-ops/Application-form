@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
@@ -617,23 +617,15 @@
         <label class="auth-label">1. 請選擇您代表報名的所屬單位<span style="color:#e11d48;">*</span></label>
         <select id="authUnit" class="field-select">
           <option value="" disabled selected>請選擇所屬單位</option>
-          <option value="和宣">和宣</option>
-          <option value="道恩">道恩</option>
+          <!-- 依中文筆畫順序排列（首字 3 劃至 21 劃） -->
           <option value="三重懿德">三重懿德</option>
-          <option value="慈明真善">慈明真善</option>
-          <option value="慈明天慈">慈明天慈</option>
-          <option value="慈明懷濟">慈明懷濟</option>
-          <option value="慈明永仁">慈明永仁</option>
-          <option value="慈明忠恕">慈明忠恕</option>
-          <option value="慈明興德">慈明興德</option>
-          <option value="慈明慈恩">慈明慈恩</option>
-          <option value="慈正">慈正</option>
-          <option value="慈愛">慈愛</option>
-          <option value="德化文德">德化文德</option>
-          <option value="峨眉">峨眉</option>
-          <option value="善生">善生</option>
-          <option value="協和">協和</option>
+          <option value="天濟">天濟</option>
           <option value="玄恩">玄恩</option>
+          <option value="永合">永合</option>
+          <option value="永誠">永誠</option>
+          <option value="弘德">弘德</option>
+          <option value="和宣">和宣</option>
+          <option value="協和">協和</option>
           <option value="武聖道合">武聖道合</option>
           <option value="武聖元妙">武聖元妙</option>
           <option value="武聖忠孝">武聖忠孝</option>
@@ -643,22 +635,31 @@
           <option value="武聖慧繼">武聖慧繼</option>
           <option value="武聖義真">武聖義真</option>
           <option value="武聖忠義">武聖忠義</option>
+          <option value="板橋慈惠">板橋慈惠</option>
+          <option value="峨眉">峨眉</option>
+          <option value="國姓懿德">國姓懿德</option>
+          <option value="淨心">淨心</option>
+          <option value="善生">善生</option>
+          <option value="道恩">道恩</option>
+          <option value="道宣">道宣</option>
           <option value="聖德">聖德</option>
-          <option value="永合">永合</option>
+          <option value="慈明真善">慈明真善</option>
+          <option value="慈明天慈">慈明天慈</option>
+          <option value="慈明懷濟">慈明懷濟</option>
+          <option value="慈明永仁">慈明永仁</option>
+          <option value="慈明忠恕">慈明忠恕</option>
+          <option value="慈明興德">慈明興德</option>
+          <option value="慈明慈恩">慈明慈恩</option>
+          <option value="慈正">慈正</option>
+          <option value="慈愛">慈愛</option>
           <option value="慈聖">慈聖</option>
-          <option value="弘德">弘德</option>
           <option value="易德彌勒">易德彌勒</option>
           <option value="易德文化">易德文化</option>
           <option value="易德忠德">易德忠德</option>
           <option value="易德翁玉">易德翁玉</option>
-          <option value="道宣">道宣</option>
-          <option value="永誠">永誠</option>
-          <option value="板橋慈惠">板橋慈惠</option>
-          <option value="聚德">聚德</option>
-          <option value="國姓懿德">國姓懿德</option>
+          <option value="德化文德">德化文德</option>
           <option value="德宣">德宣</option>
-          <option value="淨心">淨心</option>
-          <option value="天濟">天濟</option>
+          <option value="聚德">聚德</option>
         </select>
       </div>
       
@@ -735,7 +736,7 @@
   const COURSE_OPTIONS = ['明德班', '新民班', '至善班', '經典班', '無講授經驗'];
 
   const UNIT_MANAGER_MAP = {
-    '和宣': '',
+    '和宣': '吳月春',
     '道恩': '王錦雀',
     '三重懿德': '周清美',
     '慈明真善': '鄧月枝',
@@ -747,10 +748,10 @@
     '慈明慈恩': '陳新坤',
     '慈正': '顏月招',
     '慈愛': '潘是覦',
-    '德化文德': '陳雅淙',
+    '德化文德': '陳雅湶',
     '峨眉': '蔡韶悅',
     '善生': '廖花',
-    '協和': '',
+    '協和': '盧春財',
     '玄恩': '陳美蓮',
     '武聖道合': '陳平田',
     '武聖元妙': '張茂癸',
@@ -769,8 +770,7 @@
     '易德文化': '林菊',
     '易德忠德': '洪牡丹',
     '易德翁玉': '張美英',
-    '道宣': '',
-    '永誠': '',
+    '永誠': '黃秀霞',
     '板橋慈惠': '李焜照',
     '聚德': '游進福',
     '國姓懿德': '陳秀明',
@@ -1093,7 +1093,7 @@
         ${!isFirst ? `
           <label class="copy-box">
             <input type="checkbox" onchange="toggleCopyPrevious(this)">
-            同上一位資料（所屬經理、師資類別、設班公壇、培訓地點）
+            同上一位資料（所屬經理、設班公壇、培訓地點）
           </label>
         ` : ''}
 
@@ -1130,6 +1130,7 @@
             <div class="chip-group">
               <label class="chip-label"><input type="radio" name="category_${uid}" value="操持講師" onchange="clearError(this)"> 操持講師</label>
               <label class="chip-label"><input type="radio" name="category_${uid}" value="個別講師" onchange="clearError(this)"> 個別講師</label>
+              <label class="chip-label"><input type="radio" name="category_${uid}" value="推薦講師" onchange="clearError(this)"> 推薦講師</label>
             </div>
             <span class="error-msg">請選擇師資類別</span>
           </div>
@@ -1140,7 +1141,7 @@
           </div>
 
           <div class="form-group" data-field="manager">
-            <label class="field-label">所屬經理<span class="req">*</span></label>
+            <label class="field-label">所屬經理(敬稱略)<span class="req">*</span></label>
             <input type="text" class="field-manager" value="${defaultManager}" 
               placeholder="${hasAutoManager ? '系統自動帶出' : '請輸入所屬經理姓名'}" 
               ${hasAutoManager ? 'readonly tabindex="-1"' : 'oninput="clearError(this)"'}>
@@ -1236,12 +1237,14 @@
     }
   }
 
+  // 同步上一位資料：僅同步「所屬經理、設班公壇、培訓地點」
   function toggleCopyPrevious(checkboxEl) {
     const currentCard = checkboxEl.closest('.instructor-card');
     const prevCard = currentCard.previousElementSibling;
     if (!prevCard || !prevCard.classList.contains('instructor-card')) return;
 
     if (checkboxEl.checked) {
+      // 1. 同步所屬經理（若手動填寫單位）
       const prevManager = prevCard.querySelector('.field-manager');
       const curManager = currentCard.querySelector('.field-manager');
       if (prevManager && curManager && !curManager.readOnly) {
@@ -1249,20 +1252,19 @@
         clearError(curManager);
       }
 
+      // 2. 同步設班公壇
       const curAltar = currentCard.querySelector('.field-altar');
       curAltar.value = prevCard.querySelector('.field-altar').value;
       clearError(curAltar);
 
-      const prevCat = prevCard.querySelector('input[name^="category_"]:checked');
-      if (prevCat) {
-        const targetRadio = currentCard.querySelector(`input[name^="category_"][value="${prevCat.value}"]`);
-        if (targetRadio) { targetRadio.checked = true; clearError(targetRadio); }
-      }
-
+      // 3. 同步培訓地點
       const prevLoc = prevCard.querySelector('input[name^="location_"]:checked');
       if (prevLoc) {
         const targetRadio = currentCard.querySelector(`input[name^="location_"][value="${prevLoc.value}"]`);
-        if (targetRadio) { targetRadio.checked = true; clearError(targetRadio); }
+        if (targetRadio) { 
+          targetRadio.checked = true; 
+          clearError(targetRadio); 
+        }
       }
     }
   }
