@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
@@ -60,7 +60,32 @@
       text-align: center;
       color: var(--text-sub);
       font-size: 0.85rem;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
+    }
+
+    /* 注意事項區塊 */
+    .notice-card {
+      background-color: #f8fafc;
+      border-left: 4px solid var(--accent);
+      border-radius: 4px;
+      padding: 12px 16px;
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: #334155;
+      line-height: 1.6;
+    }
+
+    .notice-title {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .notice-list {
+      margin-left: 18px;
     }
 
     /* 講師資料卡片 */
@@ -133,7 +158,7 @@
     }
 
     /* 輸入框美化 (防止 iOS 縮放需大於等於 16px) */
-    input[type="text"], input[type="tel"], input[type="date"] {
+    input[type="text"], input[type="tel"], select.field-unit {
       width: 100%;
       height: 44px;
       padding: 0 12px;
@@ -145,10 +170,24 @@
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    input[type="text"]:focus, input[type="tel"]:focus, input[type="date"]:focus {
+    select.field-unit {
+      cursor: pointer;
+      appearance: auto;
+    }
+
+    input[type="text"]:focus, input[type="tel"]:focus, select.field-unit:focus {
       outline: none;
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    /* 唯讀/鎖定欄位樣式 */
+    input[readonly] {
+      background-color: #f1f5f9;
+      color: #64748b;
+      border-color: #e2e8f0;
+      cursor: not-allowed;
+      user-select: none;
     }
 
     /* 膠囊式選單 (觸控好按) */
@@ -275,41 +314,58 @@
 
 <div class="container">
   <div class="header-card">
-    <h1>講師培訓報名表</h1>
+    <h1>2027經典師資培訓報名表</h1>
     <div class="subtitle">請填寫完整資訊以利後續班程與師資安排</div>
     
-    <div class="form-group">
-      <label class="field-label">報名形式</label>
-      <div class="chip-group">
-        <label class="chip-label">
-          <input type="radio" name="regMode" value="single" checked onchange="switchMode()"> 講師本人自行報名
-        </label>
-        <label class="chip-label">
-          <input type="radio" name="regMode" value="group" onchange="switchMode()"> 單位代報多位講師
-        </label>
+    <div class="notice-card">
+      <div class="notice-title">📌 報名注意事項</div>
+      
+      <!-- 重點提醒標籤 -->
+      <div class="notice-highlight">
+        ⚠️️ <strong>重要提醒：</strong>本表單限由<strong>【各單位文書統一報名】</strong>，恕不開放個人單獨報名！
       </div>
+
+      <ul class="notice-list">
+        <li>請確實填寫所有標記 <span style="color:#e11d48;">*</span> 的必填欄位。</li>
+        <li>出生年次與領命年份請統一填寫<strong>西元年（4位數）</strong>。</li>
+        <li>若需替多位講師報名，可點擊下方「＋ 新增下一位講師」一同送出。</li>
+      </ul>
     </div>
   </div>
 
   <form id="mainForm">
     <div id="instructorsContainer"></div>
 
-    <button type="button" id="btnAddInstructor" class="btn-add" style="display:none;" onclick="addInstructorCard()">＋ 新增下一位講師</button>
+    <button type="button" id="btnAddInstructor" class="btn-add" onclick="addInstructorCard()">＋ 新增下一位講師</button>
     <button type="submit" id="btnSubmit" class="btn-submit">確認並送出報名</button>
     <div id="status"></div>
   </form>
 </div>
 
 <script>
-  // 請替換為你的 Google Apps Script Web App URL (https://script.google.com/macros/s/AKfycbxN-haI0M8s9J-ZZ4uXjkFK3KZ_DqPwQ7knQvZo4UTDIfApSJIOWfA7UaM9eBL0ig68/exec)
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxN-haI0M8s9J-ZZ4uXjkFK3KZ_DqPwQ7knQvZo4UTDIfApSJIOWfA7UaM9eBL0ig68/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby_UOWoMh9pBMUokAkZFlH-D34w6Viid_bsndkUCCBafe4XGBeRz2mlObaVyOxGBCkn/exec';
 
-  const COURSE_OPTIONS = ['明德班', '新民班', '至善班', '無講授經驗'];
+  const COURSE_OPTIONS = ['明德班', '新民班', '至善班', '經典班'];
 
-  let instructorCounter = 0;
+  // ==========================================
+  // 單位與經理對照表（您可在此自由增刪或修改）
+  // 格式：'單位名稱': '經理姓名'
+  // ==========================================
+  const UNIT_MANAGER_MAP = {
+    '台北單位': '張經理',
+    '台中單位': '李經理',
+    '高雄單位': '陳經理',
+    '台南單位': '王經理'
+  };
+
+  let cardUniqueId = 0;
 
   function createCardHTML(uid, displayIndex) {
     const isFirst = displayIndex === 1;
+    const unitOptions = Object.keys(UNIT_MANAGER_MAP).map(unit => 
+      `<option value="${unit}">${unit}</option>`
+    ).join('');
+
     return `
       <div class="instructor-card" id="card-${uid}">
         <div class="card-header">
@@ -339,32 +395,34 @@
           </div>
 
           <div class="form-group">
-            <label class="field-label">出生年次<span class="req">*</span></label>
-            <input type="text" class="field-birthYear" placeholder="例：75 或 1986" maxlength="4" inputmode="numeric" required>
+            <label class="field-label">出生年次 (西元)<span class="req">*</span></label>
+            <input type="text" class="field-birthYear" placeholder="請輸入西元年（例：1986）" maxlength="4" pattern="[12][0-9]{3}" inputmode="numeric" required title="請輸入4位西元年份，例如：1986">
           </div>
 
           <div class="form-group">
-            <label class="field-label">領命日期<span class="req">*</span></label>
-            <input type="date" class="field-appointedDate" required>
+            <label class="field-label">領命年份 (西元)<span class="req">*</span></label>
+            <input type="text" class="field-appointedYear" placeholder="請輸入西元年（例：2015）" maxlength="4" pattern="[12][0-9]{3}" inputmode="numeric" required title="請輸入4位西元年份，例如：2015">
           </div>
 
           <div class="form-group full-width">
             <label class="field-label">師資類別<span class="req">*</span></label>
             <div class="chip-group">
-              <label class="chip-label"><input type="radio" name="category_${uid}" value="推薦講師" required> 推薦講師</label>
-              <label class="chip-label"><input type="radio" name="category_${uid}" value="操持講師"> 操持講師</label>
+              <label class="chip-label"><input type="radio" name="category_${uid}" value="操持講師" required> 操持講師</label>
               <label class="chip-label"><input type="radio" name="category_${uid}" value="個別講師"> 個別講師</label>
             </div>
           </div>
 
           <div class="form-group">
             <label class="field-label">所屬單位<span class="req">*</span></label>
-            <input type="text" class="field-unit" placeholder=" " required>
+            <select class="field-unit" onchange="handleUnitChange(this)" required>
+              <option value="" disabled selected>請選擇所屬單位</option>
+              ${unitOptions}
+            </select>
           </div>
 
           <div class="form-group">
             <label class="field-label">所屬經理<span class="req">*</span></label>
-            <input type="text" class="field-manager" placeholder="請輸入經理姓名" required>
+            <input type="text" class="field-manager" placeholder="" readonly required tabindex="-1">
           </div>
 
           <div class="form-group">
@@ -401,11 +459,18 @@
 
           <div class="form-group full-width">
             <label class="field-label">通訊地址<span class="req">*</span></label>
-            <input type="text" class="field-address" placeholder="請輸入可收取通知的地址" required>
+            <input type="text" class="field-address" placeholder="請輸入到路即可" required>
           </div>
         </div>
       </div>
     `;
+  }
+
+  function handleUnitChange(selectEl) {
+    const card = selectEl.closest('.instructor-card');
+    const managerInput = card.querySelector('.field-manager');
+    const selectedUnit = selectEl.value;
+    managerInput.value = UNIT_MANAGER_MAP[selectedUnit] || '';
   }
 
   function reorderCardTitles() {
@@ -433,31 +498,17 @@
     }
   }
 
-  function switchMode() {
-    const mode = document.querySelector('input[name="regMode"]:checked').value;
-    const btnAdd = document.getElementById('btnAddInstructor');
-    const container = document.getElementById('instructorsContainer');
-    
-    container.innerHTML = '';
-    cardUniqueId = 0;
-
-    if (mode === 'single') {
-      btnAdd.style.display = 'none';
-      addInstructorCard();
-    } else {
-      btnAdd.style.display = 'block';
-      addInstructorCard();
-    }
-  }
-
   function toggleCopyPrevious(checkboxEl) {
     const currentCard = checkboxEl.closest('.instructor-card');
     const prevCard = currentCard.previousElementSibling;
     if (!prevCard || !prevCard.classList.contains('instructor-card')) return;
 
     if (checkboxEl.checked) {
-      currentCard.querySelector('.field-unit').value = prevCard.querySelector('.field-unit').value;
-      currentCard.querySelector('.field-manager').value = prevCard.querySelector('.field-manager').value;
+      const prevUnitSelect = prevCard.querySelector('.field-unit');
+      const currentUnitSelect = currentCard.querySelector('.field-unit');
+      currentUnitSelect.value = prevUnitSelect.value;
+      handleUnitChange(currentUnitSelect);
+
       currentCard.querySelector('.field-altar').value = prevCard.querySelector('.field-altar').value;
 
       const prevCat = prevCard.querySelector('input[name^="category_"]:checked');
@@ -474,13 +525,19 @@
     }
   }
 
-  switchMode();
+  function initForm() {
+    const container = document.getElementById('instructorsContainer');
+    container.innerHTML = '';
+    cardUniqueId = 0;
+    addInstructorCard();
+  }
+
+  initForm();
 
   document.getElementById('mainForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btnSubmit = document.getElementById('btnSubmit');
     const status = document.getElementById('status');
-    const mode = document.querySelector('input[name="regMode"]:checked').value;
 
     const cards = document.querySelectorAll('.instructor-card');
     const instructors = [];
@@ -496,7 +553,7 @@
         name: card.querySelector('.field-name').value.trim(),
         gender: genderEl ? genderEl.value : '',
         birthYear: card.querySelector('.field-birthYear').value.trim(),
-        appointedDate: card.querySelector('.field-appointedDate').value,
+        appointedYear: card.querySelector('.field-appointedYear').value.trim(),
         category: catEl ? catEl.value : '',
         unit: card.querySelector('.field-unit').value.trim(),
         manager: card.querySelector('.field-manager').value.trim(),
@@ -518,12 +575,12 @@
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ mode: mode, instructors: instructors })
+        body: JSON.stringify({ instructors: instructors })
       });
 
       alert(`報名成功！已完成 ${instructors.length} 位講師資料登記。`);
       document.getElementById('mainForm').reset();
-      switchMode();
+      initForm();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       status.innerText = '報名失敗，請檢查網路連線或稍後再試。';
