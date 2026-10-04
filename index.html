@@ -3,99 +3,305 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>講師培訓報名表</title>
+  <title>2027經典師資培訓報名表</title>
   <style>
     :root {
-      --primary: #1e3a8a;       /* 沉穩藏藍 */
+      --primary: #1e3a8a;
       --primary-hover: #1e40af;
       --accent: #2563eb;
-      --bg: #f8fafc;            /* 極淡灰底 */
+      --bg: #f8fafc;
       --card-bg: #ffffff;
-      --border: #e2e8f0;
-      --text-main: #1e293b;
-      --text-sub: #64748b;
-      --radius: 10px;
+      --border: #cbd5e1;
+      --text-main: #0f172a;
+      --text-sub: #475569;
+      --radius: 12px;
+      --error: #dc2626;
+      --error-bg: #fef2f2;
+      --success: #15803d;
+      --warn: #c2410c;
+      --warn-bg: #fffbeb;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", Roboto, sans-serif;
       background-color: var(--bg);
       color: var(--text-main);
-      padding: 24px 16px 60px;
-      line-height: 1.5;
+      padding: 32px 18px 320px;
+      font-size: 17px;
+      line-height: 1.65;
     }
 
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
+    .container { max-width: 760px; margin: 0 auto; }
+
+    /* 右上角懸浮倒數計時膠囊 */
+    #floatingTimer {
+      display: none;
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 9999;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1.5px solid #86efac;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+      padding: 8px 14px;
+      border-radius: 30px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--success);
+      align-items: center;
+      gap: 10px;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      user-select: none;
     }
 
-    /* 頂部標題區 */
-    .header-card {
+    #floatingTimer:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+      transform: translateY(-1px);
+    }
+
+    #floatingTimer.warning {
+      background: rgba(255, 251, 235, 0.95);
+      border-color: #fdba74;
+      color: var(--warn);
+      animation: pulseAlert 1.2s infinite alternate;
+    }
+
+    @keyframes pulseAlert {
+      from { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.3); }
+      to { box-shadow: 0 0 0 6px rgba(249, 115, 22, 0.3); }
+    }
+
+    .float-logout-btn {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #475569;
+      font-size: 0.8rem;
+      padding: 3px 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      margin-left: 4px;
+      transition: all 0.2s;
+    }
+
+    .float-logout-btn:hover {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-color: #fca5a5;
+    }
+
+    /* 頂部標題與通用卡片 */
+    .header-card, .auth-card, .instructor-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      padding: 28px 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
     }
 
     h1 {
-      font-size: 1.4rem;
-      font-weight: 700;
+      font-size: 1.85rem;
+      font-weight: 800;
       color: var(--primary);
       text-align: center;
-      margin-bottom: 6px;
-      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      letter-spacing: 0.8px;
     }
 
-    .subtitle {
-      text-align: center;
-      color: var(--text-sub);
-      font-size: 0.85rem;
-      margin-bottom: 16px;
+    .subtitle { 
+      text-align: center; 
+      color: var(--text-sub); 
+      font-size: 1.05rem; 
+      margin-bottom: 20px; 
+      font-weight: 500;
     }
 
     /* 注意事項區塊 */
     .notice-card {
       background-color: #f8fafc;
-      border-left: 4px solid var(--accent);
-      border-radius: 4px;
-      padding: 12px 16px;
-      margin-top: 12px;
-      font-size: 0.9rem;
+      border-left: 5px solid var(--accent);
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin-top: 16px;
+      font-size: 1.02rem;
       color: #334155;
-      line-height: 1.6;
+      line-height: 1.7;
     }
 
     .notice-title {
-      font-weight: 700;
+      font-weight: 800;
       color: var(--primary);
-      margin-bottom: 6px;
+      font-size: 1.15rem;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .notice-list {
-      margin-left: 18px;
+    .notice-highlight {
+      background-color: #fef2f2;
+      border: 1.5px solid #fecaca;
+      color: #b91c1c;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      line-height: 1.6;
     }
 
-    /* 講師資料卡片 */
-    .instructor-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
+    .notice-numbered-list, .notice-list {
+      margin-left: 24px;
+      color: #1e293b;
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+
+    .notice-numbered-list { margin-bottom: 10px; }
+    .notice-numbered-list li, .notice-list li { margin-bottom: 6px; }
+
+    .hl-badge {
+      background: #fef08a;
+      color: #854d0e;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .hl-danger {
+      color: #b91c1c;
+      font-weight: 700;
+    }
+
+    /* 窗口認證卡片 */
+    .auth-card {
+      border: 2px solid #bfdbfe;
+      background: #fbfdff;
+      transition: all 0.3s ease;
+    }
+
+    .auth-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .auth-row {
+      margin-bottom: 16px;
+    }
+
+    .auth-label {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .auth-input-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-secondary {
+      background-color: #eff6ff;
+      border: 2px solid #93c5fd;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      height: 48px;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover { 
+      background-color: #dbeafe; 
+      border-color: #60a5fa;
+    }
+
+    .btn-secondary:disabled { cursor: not-allowed; opacity: 0.6; }
+
+    /* 認證內崁狀態列 */
+    .auth-status-bar {
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 14px 18px;
+      border-radius: 8px;
+      margin-top: 14px;
+      display: none;
+      line-height: 1.6;
+    }
+
+    .auth-status-bar.success { 
+      background-color: #f0fdf4; 
+      color: var(--success); 
+      border: 1.5px solid #86efac; 
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .auth-status-bar.error { 
+      background-color: #fef2f2; 
+      color: var(--error); 
+      border: 1.5px solid #fca5a5; 
+      display: block; 
+    }
+
+    .btn-relogin {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      color: #334155;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .btn-relogin:hover { background: #f8fafc; border-color: #94a3b8; }
+
+    /* 主表單區域 */
+    #formSection {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .form-tips-card {
+      background: #eff6ff;
+      border: 1.5px solid #bfdbfe;
       border-radius: var(--radius);
-      padding: 22px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      padding: 16px 22px;
+      margin-bottom: 24px;
+      font-size: 1.02rem;
+      color: #1e3a8a;
+      line-height: 1.7;
+    }
+
+    .form-tips-card ul {
+      margin-left: 22px;
+      margin-top: 4px;
+    }
+
+    .instructor-card {
+      border: 1.5px solid #cbd5e1;
       animation: fadeIn 0.25s ease-in-out;
     }
 
@@ -108,209 +314,275 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 12px;
-      margin-bottom: 18px;
-      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #e2e8f0;
     }
 
     .card-title {
-      font-size: 1.1rem;
-      font-weight: 700;
+      font-size: 1.25rem;
+      font-weight: 800;
       color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
-    /* 表單網格系統 */
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      gap: 18px 20px;
     }
 
-    .full-width {
-      grid-column: span 2;
-    }
+    .full-width { grid-column: span 2; }
 
     @media (max-width: 600px) {
-      body { padding: 16px 12px 40px; }
-      .header-card, .instructor-card { padding: 18px 14px; }
-      .form-grid { grid-template-columns: 1fr; gap: 14px; }
+      body { padding: 20px 12px 60px; font-size: 16px; }
+      #floatingTimer { top: 10px; right: 10px; padding: 6px 10px; font-size: 0.82rem; }
+      .header-card, .auth-card, .instructor-card { padding: 20px 16px; }
+      .form-grid { grid-template-columns: 1fr; gap: 16px; }
       .full-width { grid-column: span 1; }
+      h1 { font-size: 1.55rem; }
+      .btn-secondary { padding: 0 12px; font-size: 0.92rem; }
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
+      position: relative;
     }
 
     label.field-label {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #334155;
-      margin-bottom: 6px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 8px;
     }
 
-    label.field-label span.req {
-      color: #e11d48;
-      margin-left: 2px;
-    }
+    label.field-label span.req { color: #e11d48; margin-left: 2px; }
 
-    /* 輸入框美化 (防止 iOS 縮放需大於等於 16px) */
-    input[type="text"], input[type="tel"], select.field-unit {
+    input[type="text"], input[type="tel"], input[type="email"], select.field-select {
       width: 100%;
-      height: 44px;
-      padding: 0 12px;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 16px;
+      height: 48px;
+      padding: 0 14px;
+      border: 1.8px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 17px;
       background: #fff;
       color: var(--text-main);
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: all 0.2s ease;
     }
 
-    select.field-unit {
-      cursor: pointer;
-      appearance: auto;
-    }
+    select.field-select { cursor: pointer; appearance: auto; }
 
-    input[type="text"]:focus, input[type="tel"]:focus, select.field-unit:focus {
+    input:focus, select:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+      box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.15);
     }
 
-    /* 唯讀/鎖定欄位樣式 */
     input[readonly] {
       background-color: #f1f5f9;
       color: #64748b;
-      border-color: #e2e8f0;
+      border-color: #cbd5e1;
       cursor: not-allowed;
       user-select: none;
     }
 
-    /* 膠囊式選單 (觸控好按) */
-    .chip-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    .has-error input, .has-error select {
+      border-color: var(--error) !important;
+      background-color: var(--error-bg);
+      animation: shake 0.25s ease-in-out;
     }
+
+    .has-error .chip-group {
+      border: 2px dashed var(--error);
+      padding: 6px;
+      border-radius: 8px;
+      background-color: var(--error-bg);
+      animation: shake 0.25s ease-in-out;
+    }
+
+    .error-msg {
+      display: none;
+      color: var(--error);
+      font-size: 0.88rem;
+      margin-top: 6px;
+      font-weight: 700;
+    }
+
+    .has-error .error-msg { display: block; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-4px); }
+      40%, 80% { transform: translateX(4px); }
+    }
+
+    .chip-group { display: flex; flex-wrap: wrap; gap: 10px; }
 
     .chip-label {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 40px;
-      padding: 6px 14px;
+      min-height: 46px;
+      padding: 8px 18px;
       background: #f1f5f9;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 0.92rem;
-      color: #475569;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #334155;
+      font-weight: 500;
       cursor: pointer;
       user-select: none;
       transition: all 0.15s ease;
     }
 
-    .chip-label input {
-      display: none;
-    }
+    .chip-label input { display: none; }
 
     .chip-label:has(input:checked) {
       background: #eff6ff;
       border-color: var(--accent);
       color: var(--accent);
-      font-weight: 600;
+      font-weight: 700;
     }
 
-    /* 「同上一位」勾選盒 */
     .copy-box {
       background: #f8fafc;
-      border: 1px dashed #94a3b8;
-      padding: 10px 14px;
-      border-radius: 6px;
-      margin-bottom: 16px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #475569;
+      border: 1.5px dashed #94a3b8;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #334155;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       cursor: pointer;
     }
 
     .copy-box input {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       cursor: pointer;
     }
+
+    /* 溫馨提醒卡片 */
+    .reminder-card {
+      background: #fffbeb;
+      border: 1.5px solid #fde68a;
+      border-left: 6px solid #f59e0b;
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin: 24px 0;
+      color: #1e293b;
+      font-size: 1.02rem;
+      line-height: 1.75;
+    }
+
+    .reminder-title {
+      font-weight: 800;
+      color: #b45309;
+      font-size: 1.18rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .reminder-list {
+      margin-left: 22px;
+      padding-left: 0;
+    }
+
+    .reminder-list > li {
+      margin-bottom: 10px;
+    }
+
+    .reminder-sub-list {
+      list-style-type: none;
+      margin-left: 0;
+      padding-left: 0;
+      margin-top: 6px;
+    }
+
+    .reminder-sub-list li {
+      margin-bottom: 6px;
+      color: #334155;
+    }
+
+    .phone-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .phone-link:hover { text-decoration: underline; }
 
     /* 按鈕樣式 */
     .btn-add {
       width: 100%;
-      height: 48px;
+      height: 52px;
       background: #ffffff;
-      border: 2px dashed #94a3b8;
+      border: 2px dashed #64748b;
       border-radius: var(--radius);
-      color: #475569;
-      font-size: 1rem;
-      font-weight: 600;
+      color: #334155;
+      font-size: 1.1rem;
+      font-weight: 700;
       cursor: pointer;
-      margin-bottom: 20px;
-      transition: background 0.2s, border-color 0.2s;
+      margin-bottom: 8px;
+      transition: all 0.2s;
     }
 
-    .btn-add:hover {
-      background: #f1f5f9;
-      border-color: #64748b;
+    .btn-add:hover { 
+      background: #f1f5f9; 
+      border-color: var(--primary);
+      color: var(--primary);
     }
 
     .btn-del {
       background: #fee2e2;
       color: #b91c1c;
       border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-size: 0.85rem;
-      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.92rem;
+      font-weight: 700;
       cursor: pointer;
     }
 
     .btn-submit {
       width: 100%;
-      height: 50px;
+      height: 56px;
       background: var(--primary);
       color: white;
       border: none;
       border-radius: var(--radius);
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 0.8px;
       cursor: pointer;
-      box-shadow: 0 4px 6px rgba(30, 58, 138, 0.15);
+      box-shadow: 0 4px 10px rgba(30, 58, 138, 0.2);
       transition: background 0.2s, transform 0.05s;
     }
 
-    .btn-submit:active {
-      transform: scale(0.99);
-    }
-
-    .btn-submit:disabled {
-      background: #94a3b8;
-      box-shadow: none;
-      cursor: not-allowed;
-    }
+    .btn-submit:hover { background: var(--primary-hover); }
+    .btn-submit:active { transform: scale(0.99); }
+    .btn-submit:disabled { background: #94a3b8; cursor: not-allowed; }
 
     #status {
       text-align: center;
-      margin-top: 14px;
-      font-size: 0.95rem;
-      font-weight: 600;
+      margin-top: 16px;
+      font-size: 1.05rem;
+      font-weight: 700;
     }
   </style>
 </head>
 <body>
+
+<!-- 右上角懸浮倒數計時膠囊 -->
+<div id="floatingTimer" onclick="resetSessionActivity()" title="點擊即可重置延長 3 分鐘">
+  <span id="floatingTimerText">⏳ 倒數 03:00</span>
+  <button type="button" class="float-logout-btn" onclick="event.stopPropagation(); manualLogout();">登出</button>
+</div>
 
 <div class="container">
   <div class="header-card">
@@ -320,51 +592,496 @@
     <div class="notice-card">
       <div class="notice-title">📌 報名注意事項</div>
       
-      <!-- 重點提醒標籤 -->
       <div class="notice-highlight">
-        ⚠️️ <strong>重要提醒：</strong>本表單限由<strong>【各單位文書統一報名】</strong>，恕不開放個人單獨報名！
+        ⚠ <strong>重要提醒：</strong>本表由<strong>【單位指定窗口統一報名】</strong>，不開放個人報名。
       </div>
 
+      <ol class="notice-numbered-list">
+        <li>填寫報名表之前，請確認所有參加培訓師資都經<strong>單位負責經理核准</strong>。</li>
+        <li>報名截止日：<span class="hl-badge">2026/12/31 (四)</span>。</li>
+      </ol>
+
       <ul class="notice-list">
-        <li>請確實填寫所有標記 <span style="color:#e11d48;">*</span> 的必填欄位。</li>
-        <li>出生年次與領命年份請統一填寫<strong>西元年（4位數）</strong>。</li>
-        <li>若需替多位講師報名，可點擊下方「＋ 新增下一位講師」一同送出。</li>
+        <li>首次填寫請選擇單位並以窗口 Gmail 綁定認證；之後該單位將僅限該 Gmail 登入修改。</li>
       </ul>
     </div>
   </div>
 
-  <form id="mainForm">
-    <div id="instructorsContainer"></div>
+  <!-- Gmail 認證與單位綁定區塊 -->
+  <div class="auth-card" id="authCard">
+    <div class="auth-title" id="authHeaderTitle">🔐 單位窗口身分確認與登入</div>
 
-    <button type="button" id="btnAddInstructor" class="btn-add" onclick="addInstructorCard()">＋ 新增下一位講師</button>
-    <button type="submit" id="btnSubmit" class="btn-submit">確認並送出報名</button>
-    <div id="status"></div>
-  </form>
+    <!-- 輸入區塊（登入成功後收合隱藏） -->
+    <div id="authFieldsContainer">
+      <div class="auth-row">
+        <label class="auth-label">1. 請選擇您代表報名的所屬單位<span style="color:#e11d48;">*</span></label>
+        <select id="authUnit" class="field-select">
+          <option value="" disabled selected>請選擇所屬單位</option>
+          <option value="和宣">和宣</option>
+          <option value="道恩">道恩</option>
+          <option value="三重懿德">三重懿德</option>
+          <option value="慈明真善">慈明真善</option>
+          <option value="慈明天慈">慈明天慈</option>
+          <option value="慈明懷濟">慈明懷濟</option>
+          <option value="慈明永仁">慈明永仁</option>
+          <option value="慈明忠恕">慈明忠恕</option>
+          <option value="慈明興德">慈明興德</option>
+          <option value="慈明慈恩">慈明慈恩</option>
+          <option value="慈正">慈正</option>
+          <option value="慈愛">慈愛</option>
+          <option value="德化文德">德化文德</option>
+          <option value="峨眉">峨眉</option>
+          <option value="善生">善生</option>
+          <option value="協和">協和</option>
+          <option value="玄恩">玄恩</option>
+          <option value="武聖道合">武聖道合</option>
+          <option value="武聖元妙">武聖元妙</option>
+          <option value="武聖忠孝">武聖忠孝</option>
+          <option value="武聖旭德">武聖旭德</option>
+          <option value="武聖善化">武聖善化</option>
+          <option value="武聖慧恩">武聖慧恩</option>
+          <option value="武聖慧繼">武聖慧繼</option>
+          <option value="武聖義真">武聖義真</option>
+          <option value="武聖忠義">武聖忠義</option>
+          <option value="聖德">聖德</option>
+          <option value="永合">永合</option>
+          <option value="慈聖">慈聖</option>
+          <option value="弘德">弘德</option>
+          <option value="易德彌勒">易德彌勒</option>
+          <option value="易德文化">易德文化</option>
+          <option value="易德忠德">易德忠德</option>
+          <option value="易德翁玉">易德翁玉</option>
+          <option value="道宣">道宣</option>
+          <option value="永誠">永誠</option>
+          <option value="板橋慈惠">板橋慈惠</option>
+          <option value="聚德">聚德</option>
+          <option value="國姓懿德">國姓懿德</option>
+          <option value="德宣">德宣</option>
+          <option value="淨心">淨心</option>
+          <option value="天濟">天濟</option>
+        </select>
+      </div>
+      
+      <div class="auth-row">
+        <label class="auth-label">2. 請輸入單位窗口 Gmail 信箱<span style="color:#e11d48;">*</span></label>
+        <div class="auth-input-group">
+          <input type="email" id="authEmail" placeholder="例：example@gmail.com" style="flex: 1; min-width: 220px;">
+          <button type="button" class="btn-secondary" id="btnSendOtp" onclick="sendOtp()">發送驗證碼</button>
+        </div>
+      </div>
+
+      <div class="auth-row" id="otpSection" style="display: none;">
+        <label class="auth-label">3. 請輸入信件中的 6 位數驗證碼</label>
+        <div class="auth-input-group">
+          <input type="text" id="authOtp" placeholder="請輸入 6 位數驗證碼" maxlength="6" inputmode="numeric" style="flex: 1;">
+          <button type="button" class="btn-secondary" id="btnVerifyOtp" onclick="verifyOtp()">驗證並進入表單</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 狀態列（登入成功後保留此區顯示單位資訊） -->
+    <div id="authStatus" class="auth-status-bar"></div>
+  </div>
+
+  <!-- 主表單（未認證前隱藏，登入後才顯示） -->
+  <div id="formSection">
+    
+    <!-- 登入後才出現的填表提醒 -->
+    <div class="form-tips-card">
+      <strong>📝 講師資料填寫須知：</strong>
+      <ul>
+        <li>請確實填寫所有標記 <span style="color:#e11d48; font-weight: 800;">*</span> 的必填欄位。</li>
+        <li>出生年次與領命年份請統一填寫<strong>西元年（4位數）</strong>。</li>
+      </ul>
+    </div>
+
+    <form id="mainForm" novalidate>
+      <div id="instructorsContainer"></div>
+
+      <button type="button" id="btnAddInstructor" class="btn-add" onclick="addInstructorCard()">＋ 新增下一位講師</button>
+
+      <!-- 溫馨提醒區塊 -->
+      <div class="reminder-card">
+        <div class="reminder-title">🌿 溫馨提醒</div>
+        <ol class="reminder-list">
+          <li>2027年度經典班培訓內容為<strong>《大學、白陽聖訓》</strong>，培訓地點：北部(靈隱寺)及中部(武聖宮)。</li>
+          <li>開課日：<span class="hl-badge">2027年2月27日起</span>，每月第四週六進行。</li>
+          <li>各設班佛堂至少三位推薦講師，接受中心排課，推薦講師出席率將影響設班資格。</li>
+          <li>經典班操持、個別講師，<span class="hl-danger">未能全程參與者，請勿報名</span>。</li>
+          <li>
+            參與培訓講師注意事項：
+            <ul class="reminder-sub-list">
+              <li>(1) 請於當日 <strong>07:30 以前完成報到</strong>，超過時間者，不得掛號參班，事先電話知會者除外。</li>
+              <li>(2) 請假：除靈隱中心道務需要奉派出國外，因個人因素或是地區道務需求，請假次數以<strong class="hl-danger">二次為限</strong>；所有師資皆比照此規定，超過次數者即自動退訓，請謹守班規。</li>
+              <li>(3) 本班程<strong>不開放旁聽</strong>。</li>
+            </ul>
+          </li>
+          <li>
+            詢問電話：<br>
+            吳麗安講師 <a href="tel:0919553941" class="phone-link">0919-553941</a>、葉若潔講師 <a href="tel:0961070327" class="phone-link">0961-070327</a>
+          </li>
+        </ol>
+      </div>
+
+      <button type="submit" id="btnSubmit" class="btn-submit">確認並送出報名資料</button>
+      <div id="status"></div>
+    </form>
+  </div>
 </div>
 
 <script>
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby_UOWoMh9pBMUokAkZFlH-D34w6Viid_bsndkUCCBafe4XGBeRz2mlObaVyOxGBCkn/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSc4afS0jDTvVefP36WtGD-dUl3H7hU70mgS3ZXhf72joAIqvkjLvw0pQNoGVARPvC/exec';
 
-  const COURSE_OPTIONS = ['明德班', '新民班', '至善班', '經典班'];
+  const COURSE_OPTIONS = ['明德班', '新民班', '至善班', '經典班', '無講授經驗'];
 
-  // ==========================================
-  // 單位與經理對照表（您可在此自由增刪或修改）
-  // 格式：'單位名稱': '經理姓名'
-  // ==========================================
   const UNIT_MANAGER_MAP = {
-    '台北單位': '張經理',
-    '台中單位': '李經理',
-    '高雄單位': '陳經理',
-    '台南單位': '王經理'
+    '和宣': '',
+    '道恩': '王錦雀',
+    '三重懿德': '周清美',
+    '慈明真善': '鄧月枝',
+    '慈明天慈': '藍銹女',
+    '慈明懷濟': '黃淑雲',
+    '慈明永仁': '林秀春',
+    '慈明忠恕': '呂文慧',
+    '慈明興德': '吳美惠',
+    '慈明慈恩': '陳新坤',
+    '慈正': '顏月招',
+    '慈愛': '潘是覦',
+    '德化文德': '陳雅淙',
+    '峨眉': '蔡韶悅',
+    '善生': '廖花',
+    '協和': '',
+    '玄恩': '陳美蓮',
+    '武聖道合': '陳平田',
+    '武聖元妙': '張茂癸',
+    '武聖忠孝': '張瑞嬌',
+    '武聖旭德': '洪秀旭',
+    '武聖善化': '施金杰',
+    '武聖慧恩': '陳婕穎',
+    '武聖慧繼': '張文鳳',
+    '武聖義真': '蘇冊',
+    '武聖忠義': '王振興',
+    '聖德': '汪志冀',
+    '永合': '董光雄',
+    '慈聖': '李秋香',
+    '弘德': '董招賢',
+    '易德彌勒': '林順',
+    '易德文化': '林菊',
+    '易德忠德': '洪牡丹',
+    '易德翁玉': '張美英',
+    '道宣': '',
+    '永誠': '',
+    '板橋慈惠': '李焜照',
+    '聚德': '游進福',
+    '國姓懿德': '陳秀明',
+    '德宣': '黃用臧',
+    '淨心': '周榮輝',
+    '天濟': '謝耀宏'
   };
 
+  // 登入狀態與逾時設定（3 分鐘 = 180 秒，停止操作 10 秒後開始倒數）
+  const SESSION_TIMEOUT_SECONDS = 180;
+  const IDLE_WAIT_SECONDS = 10;
+  let remainingSeconds = SESSION_TIMEOUT_SECONDS;
+  let sessionTimerInterval = null;
+  let idleStartTimeout = null;
+  let isCountingDown = false;
+  let baseLoginMessage = "";
+
   let cardUniqueId = 0;
+  let verifiedEmail = "";
+  let verifiedUnit = "";
+  let authToken = "";
+
+  // 1. 發送驗證碼
+  async function sendOtp() {
+    const unitSelect = document.getElementById('authUnit');
+    const emailInput = document.getElementById('authEmail');
+    const unit = unitSelect.value;
+    const email = emailInput.value.trim().toLowerCase();
+    const btn = document.getElementById('btnSendOtp');
+
+    if (!unit) {
+      showAuthStatus('請先選擇所屬單位！', 'error');
+      unitSelect.focus();
+      return;
+    }
+    if (!email || !email.endsWith('@gmail.com')) {
+      showAuthStatus('請輸入正確的 @gmail.com 信箱！', 'error');
+      emailInput.focus();
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerText = '檢查與發送中...';
+    showAuthStatus('系統正在核對單位綁定狀態並發送驗證碼...', 'success');
+
+    try {
+      const resp = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'sendOTP', unit: unit, email: email })
+      });
+      const data = await resp.json();
+
+      if (data.result === 'success') {
+        showAuthStatus(`驗證碼已寄至 ${email}，請於 10 分鐘內查收並輸入。`, 'success');
+        document.getElementById('otpSection').style.display = 'block';
+        unitSelect.disabled = true;
+        emailInput.readOnly = true;
+        btn.innerText = '已寄送';
+      } else {
+        showAuthStatus(data.message || '發送失敗', 'error');
+        btn.disabled = false;
+        btn.innerText = '發送驗證碼';
+      }
+    } catch (err) {
+      showAuthStatus('連線逾時，請確認網路連線或稍後再試。', 'error');
+      btn.disabled = false;
+      btn.innerText = '發送驗證碼';
+    }
+  }
+
+  // 2. 驗證 OTP
+  async function verifyOtp() {
+    const unit = document.getElementById('authUnit').value;
+    const email = document.getElementById('authEmail').value.trim().toLowerCase();
+    const otp = document.getElementById('authOtp').value.trim();
+    const btn = document.getElementById('btnVerifyOtp');
+
+    if (!otp || otp.length !== 6) {
+      showAuthStatus('請輸入完整的 6 位數數字驗證碼', 'error');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerText = '驗證中...';
+
+    try {
+      const resp = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'verifyOTP', unit: unit, email: email, otp: otp })
+      });
+      const data = await resp.json();
+
+      if (data.result === 'success') {
+        verifiedEmail = email;
+        verifiedUnit = unit;
+        authToken = data.token;
+
+        collapseAuthSection(`✔ 身分驗證成功！已代表【${unit}】 登入。`);
+        document.getElementById('formSection').style.display = 'block';
+        startSessionTimer();
+
+        if (data.hasHistory && data.instructors && data.instructors.length > 0) {
+          loadExistingData(data.instructors);
+        } else {
+          initForm();
+        }
+      } else {
+        showAuthStatus(data.message || '驗證碼錯誤', 'error');
+        btn.disabled = false;
+        btn.innerText = '驗證並進入表單';
+      }
+    } catch (err) {
+      showAuthStatus('驗證過程出錯，請確認網路後再試。', 'error');
+      btn.disabled = false;
+      btn.innerText = '驗證並進入表單';
+    }
+  }
+
+  // 簡化登入區塊
+  function collapseAuthSection(successText) {
+    baseLoginMessage = successText;
+    document.getElementById('authHeaderTitle').style.display = 'none';
+    document.getElementById('authFieldsContainer').style.display = 'none';
+    
+    const statusEl = document.getElementById('authStatus');
+    statusEl.className = 'auth-status-bar success';
+    statusEl.innerHTML = `
+      <span>${baseLoginMessage}</span>
+      <button type="button" class="btn-relogin" onclick="manualLogout()">登出 / 切換帳號</button>
+    `;
+    statusEl.style.display = 'flex';
+  }
+
+  // 更新右上角懸浮窗文字與樣式
+  function updateFloatingTimerDisplay() {
+    const timerBox = document.getElementById('floatingTimer');
+    const timerText = document.getElementById('floatingTimerText');
+    const minutes = String(Math.floor(remainingSeconds / 60)).padStart(2, '0');
+    const seconds = String(remainingSeconds % 60).padStart(2, '0');
+    const isWarning = remainingSeconds <= 45;
+
+    if (!isCountingDown) {
+      timerBox.className = '';
+      timerText.innerHTML = `🟢【${verifiedUnit}】填寫中`;
+      return;
+    }
+
+    if (isWarning) {
+      timerBox.className = 'warning';
+      timerText.innerHTML = `⚠️倒數 ${minutes}:${seconds} (點擊延長)`;
+    } else {
+      timerBox.className = '';
+      timerText.innerHTML = `⏳閒置倒數 ${minutes}:${seconds}`;
+    }
+  }
+
+  // 啟動會話監聽
+  function startSessionTimer() {
+    stopSessionTimer();
+    const timerBox = document.getElementById('floatingTimer');
+    timerBox.style.display = 'flex';
+    resetSessionActivity();
+
+    ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
+      window.addEventListener(evt, resetSessionActivity, { passive: true });
+    });
+  }
+
+  // 使用者有操作：暫停倒數，並設定 10 秒後重啟倒數
+  function resetSessionActivity() {
+    if (!authToken) return;
+
+    remainingSeconds = SESSION_TIMEOUT_SECONDS;
+    isCountingDown = false;
+    updateFloatingTimerDisplay();
+
+    if (sessionTimerInterval) {
+      clearInterval(sessionTimerInterval);
+      sessionTimerInterval = null;
+    }
+    if (idleStartTimeout) {
+      clearTimeout(idleStartTimeout);
+    }
+
+    // 停止操作 10 秒後才開始倒數
+    idleStartTimeout = setTimeout(() => {
+      isCountingDown = true;
+      updateFloatingTimerDisplay();
+      sessionTimerInterval = setInterval(() => {
+        remainingSeconds--;
+        if (remainingSeconds <= 0) {
+          handleSessionTimeout();
+        } else {
+          updateFloatingTimerDisplay();
+        }
+      }, 1000);
+    }, IDLE_WAIT_SECONDS * 1000);
+  }
+
+  function stopSessionTimer() {
+    if (sessionTimerInterval) {
+      clearInterval(sessionTimerInterval);
+      sessionTimerInterval = null;
+    }
+    if (idleStartTimeout) {
+      clearTimeout(idleStartTimeout);
+      idleStartTimeout = null;
+    }
+    isCountingDown = false;
+
+    const timerBox = document.getElementById('floatingTimer');
+    if (timerBox) timerBox.style.display = 'none';
+
+    ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(evt => {
+      window.removeEventListener(evt, resetSessionActivity);
+    });
+  }
+
+  // 逾時處理
+  function handleSessionTimeout() {
+    stopSessionTimer();
+    resetAuthSection();
+    alert('⏱ 系統提醒：您已閒置超過 3 分鐘未進行操作，基於資料安全已自動登出！如需繼續填寫請重新登入。');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // 手動登出
+  function manualLogout() {
+    if (confirm('確定要登出並切換帳號嗎？尚未送出的修改將不會被保存。')) {
+      stopSessionTimer();
+      resetAuthSection();
+    }
+  }
+
+  // 重置回登入表單
+  function resetAuthSection() {
+    stopSessionTimer();
+    document.getElementById('authHeaderTitle').style.display = 'flex';
+    document.getElementById('authFieldsContainer').style.display = 'block';
+    document.getElementById('authStatus').style.display = 'none';
+    
+    const unitSelect = document.getElementById('authUnit');
+    const emailInput = document.getElementById('authEmail');
+    const btnSend = document.getElementById('btnSendOtp');
+
+    unitSelect.disabled = false;
+    emailInput.readOnly = false;
+    btnSend.disabled = false;
+    btnSend.innerText = '發送驗證碼';
+
+    document.getElementById('otpSection').style.display = 'none';
+    document.getElementById('formSection').style.display = 'none';
+
+    verifiedEmail = "";
+    verifiedUnit = "";
+    authToken = "";
+  }
+
+  function showAuthStatus(msg, type) {
+    const el = document.getElementById('authStatus');
+    el.className = 'auth-status-bar ' + type;
+    el.innerText = msg;
+    el.style.display = 'block';
+  }
+
+  function loadExistingData(list) {
+    const container = document.getElementById('instructorsContainer');
+    container.innerHTML = '';
+    cardUniqueId = 0;
+
+    list.forEach(inst => {
+      addInstructorCard();
+      const currentCard = container.lastElementChild;
+      const uid = currentCard.id.replace('card-', '');
+
+      currentCard.querySelector('.field-name').value = inst.name || '';
+      currentCard.querySelector('.field-birthYear').value = inst.birthYear || '';
+      currentCard.querySelector('.field-appointedYear').value = inst.appointedYear || '';
+      currentCard.querySelector('.field-manager').value = inst.manager || '';
+      currentCard.querySelector('.field-altar').value = inst.altar || '';
+      currentCard.querySelector('.field-mobile').value = inst.mobile || '';
+      currentCard.querySelector('.field-tel').value = inst.tel || '';
+      currentCard.querySelector('.field-address').value = inst.address || '';
+
+      if (inst.gender) {
+        const gRadio = currentCard.querySelector(`input[name="gender_${uid}"][value="${inst.gender}"]`);
+        if (gRadio) gRadio.checked = true;
+      }
+      if (inst.category) {
+        const cRadio = currentCard.querySelector(`input[name="category_${uid}"][value="${inst.category}"]`);
+        if (cRadio) cRadio.checked = true;
+      }
+      if (inst.location) {
+        const lRadio = currentCard.querySelector(`input[name="location_${uid}"][value="${inst.location}"]`);
+        if (lRadio) lRadio.checked = true;
+      }
+      if (Array.isArray(inst.courses)) {
+        inst.courses.forEach(c => {
+          const cb = currentCard.querySelector(`input[name="courses_${uid}"][value="${c}"]`);
+          if (cb) cb.checked = true;
+        });
+      }
+    });
+  }
 
   function createCardHTML(uid, displayIndex) {
     const isFirst = displayIndex === 1;
-    const unitOptions = Object.keys(UNIT_MANAGER_MAP).map(unit => 
-      `<option value="${unit}">${unit}</option>`
-    ).join('');
+    const defaultManager = (UNIT_MANAGER_MAP[verifiedUnit] || '').trim();
+    const hasAutoManager = defaultManager !== '';
 
     return `
       <div class="instructor-card" id="card-${uid}">
@@ -376,101 +1093,122 @@
         ${!isFirst ? `
           <label class="copy-box">
             <input type="checkbox" onchange="toggleCopyPrevious(this)">
-            同上一位資料（單位、經理、類別、公壇、地點）
+            同上一位資料（所屬經理、師資類別、設班公壇、培訓地點）
           </label>
         ` : ''}
 
         <div class="form-grid">
-          <div class="form-group">
+          <div class="form-group" data-field="name">
             <label class="field-label">姓名<span class="req">*</span></label>
-            <input type="text" class="field-name" placeholder="請輸入姓名" required>
+            <input type="text" class="field-name" placeholder="請輸入姓名" oninput="clearError(this)">
+            <span class="error-msg">請填寫姓名</span>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" data-field="gender">
             <label class="field-label">性別<span class="req">*</span></label>
             <div class="chip-group">
-              <label class="chip-label"><input type="radio" name="gender_${uid}" value="乾" required> 乾 </label>
-              <label class="chip-label"><input type="radio" name="gender_${uid}" value="坤"> 坤 </label>
+              <label class="chip-label"><input type="radio" name="gender_${uid}" value="乾" onchange="clearError(this)"> 乾 </label>
+              <label class="chip-label"><input type="radio" name="gender_${uid}" value="坤" onchange="clearError(this)"> 坤 </label>
             </div>
+            <span class="error-msg">請選擇性別</span>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" data-field="birthYear">
             <label class="field-label">出生年次 (西元)<span class="req">*</span></label>
-            <input type="text" class="field-birthYear" placeholder="請輸入西元年（例：1986）" maxlength="4" pattern="[12][0-9]{3}" inputmode="numeric" required title="請輸入4位西元年份，例如：1986">
+            <input type="text" class="field-birthYear" placeholder="請輸入西元年（例：1986）" maxlength="4" inputmode="numeric" oninput="clearError(this)">
+            <span class="error-msg">請輸入4位西元年份（例：1986）</span>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" data-field="appointedYear">
             <label class="field-label">領命年份 (西元)<span class="req">*</span></label>
-            <input type="text" class="field-appointedYear" placeholder="請輸入西元年（例：2015）" maxlength="4" pattern="[12][0-9]{3}" inputmode="numeric" required title="請輸入4位西元年份，例如：2015">
+            <input type="text" class="field-appointedYear" placeholder="請輸入西元年（例：2015）" maxlength="4" inputmode="numeric" oninput="clearError(this)">
+            <span class="error-msg">請輸入4位西元年份（例：2015）</span>
           </div>
 
-          <div class="form-group full-width">
+          <div class="form-group full-width" data-field="category">
             <label class="field-label">師資類別<span class="req">*</span></label>
             <div class="chip-group">
-              <label class="chip-label"><input type="radio" name="category_${uid}" value="操持講師" required> 操持講師</label>
-              <label class="chip-label"><input type="radio" name="category_${uid}" value="個別講師"> 個別講師</label>
+              <label class="chip-label"><input type="radio" name="category_${uid}" value="操持講師" onchange="clearError(this)"> 操持講師</label>
+              <label class="chip-label"><input type="radio" name="category_${uid}" value="個別講師" onchange="clearError(this)"> 個別講師</label>
             </div>
+            <span class="error-msg">請選擇師資類別</span>
           </div>
 
           <div class="form-group">
-            <label class="field-label">所屬單位<span class="req">*</span></label>
-            <select class="field-unit" onchange="handleUnitChange(this)" required>
-              <option value="" disabled selected>請選擇所屬單位</option>
-              ${unitOptions}
-            </select>
+            <label class="field-label">所屬單位</label>
+            <input type="text" class="field-unit" value="${verifiedUnit}" readonly tabindex="-1">
           </div>
 
-          <div class="form-group">
+          <div class="form-group" data-field="manager">
             <label class="field-label">所屬經理<span class="req">*</span></label>
-            <input type="text" class="field-manager" placeholder="" readonly required tabindex="-1">
+            <input type="text" class="field-manager" value="${defaultManager}" 
+              placeholder="${hasAutoManager ? '系統自動帶出' : '請輸入所屬經理姓名'}" 
+              ${hasAutoManager ? 'readonly tabindex="-1"' : 'oninput="clearError(this)"'}>
+            <span class="error-msg">請填寫所屬經理</span>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" data-field="altar">
             <label class="field-label">設班公壇<span class="req">*</span></label>
-            <input type="text" class="field-altar" placeholder="請輸入公壇名稱" required>
+            <input type="text" class="field-altar" placeholder="請輸入公壇名稱" oninput="clearError(this)">
+            <span class="error-msg">請輸入設班公壇</span>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" data-field="location">
             <label class="field-label">培訓地點<span class="req">*</span></label>
             <div class="chip-group">
-              <label class="chip-label"><input type="radio" name="location_${uid}" value="靈隱寺" required> 靈隱寺</label>
-              <label class="chip-label"><input type="radio" name="location_${uid}" value="武聖宮"> 武聖宮</label>
+              <label class="chip-label"><input type="radio" name="location_${uid}" value="靈隱寺" onchange="clearError(this)"> 靈隱寺</label>
+              <label class="chip-label"><input type="radio" name="location_${uid}" value="武聖宮" onchange="clearError(this)"> 武聖宮</label>
             </div>
+            <span class="error-msg">請選擇培訓地點</span>
           </div>
 
-          <div class="form-group full-width">
-            <label class="field-label">曾經講授過之中心班程 (可多選)</label>
+          <div class="form-group full-width" data-field="courses">
+            <label class="field-label">曾經講授過之中心班程 (可多選)<span class="req">*</span></label>
             <div class="chip-group">
               ${COURSE_OPTIONS.map(c => `
-                <label class="chip-label"><input type="checkbox" name="courses_${uid}" value="${c}"> ${c}</label>
+                <label class="chip-label"><input type="checkbox" name="courses_${uid}" value="${c}" onchange="handleCourseChange(this); clearError(this)"> ${c}</label>
               `).join('')}
             </div>
+            <span class="error-msg">請至少勾選一項班程（若無經驗請勾選「無講授經驗」）</span>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" data-field="mobile">
             <label class="field-label">電話(手機)<span class="req">*</span></label>
-            <input type="tel" class="field-mobile" placeholder="09xxxxxxxx" pattern="09[0-9]{8}" maxlength="10" required title="請輸入09開頭的10位手機號碼">
+            <input type="tel" class="field-mobile" placeholder="09xxxxxxxx" maxlength="10" oninput="clearError(this)">
+            <span class="error-msg">請輸入正確的09開頭10位手機號碼</span>
           </div>
 
           <div class="form-group">
             <label class="field-label">電話(市話)</label>
-            <input type="tel" class="field-tel" placeholder="02-xxxxxxxx">
+            <input type="tel" class="field-tel" placeholder="02-xxxxxxxx（選填）">
           </div>
 
-          <div class="form-group full-width">
+          <div class="form-group full-width" data-field="address">
             <label class="field-label">通訊地址<span class="req">*</span></label>
-            <input type="text" class="field-address" placeholder="請輸入到路即可" required>
+            <input type="text" class="field-address" placeholder="請輸入到路即可" oninput="clearError(this)">
+            <span class="error-msg">請輸入通訊地址</span>
           </div>
         </div>
       </div>
     `;
   }
 
-  function handleUnitChange(selectEl) {
-    const card = selectEl.closest('.instructor-card');
-    const managerInput = card.querySelector('.field-manager');
-    const selectedUnit = selectEl.value;
-    managerInput.value = UNIT_MANAGER_MAP[selectedUnit] || '';
+  function handleCourseChange(checkboxEl) {
+    const card = checkboxEl.closest('.instructor-card');
+    const uid = card.id.replace('card-', '');
+    const checkboxes = card.querySelectorAll(`input[name="courses_${uid}"]`);
+
+    if (checkboxEl.value === '無講授經驗' && checkboxEl.checked) {
+      checkboxes.forEach(cb => { if (cb.value !== '無講授經驗') cb.checked = false; });
+    } else if (checkboxEl.checked && checkboxEl.value !== '無講授經驗') {
+      const noneCheckbox = Array.from(checkboxes).find(cb => cb.value === '無講授經驗');
+      if (noneCheckbox) noneCheckbox.checked = false;
+    }
+  }
+
+  function clearError(el) {
+    const formGroup = el.closest('.form-group');
+    if (formGroup) formGroup.classList.remove('has-error');
   }
 
   function reorderCardTitles() {
@@ -504,23 +1242,27 @@
     if (!prevCard || !prevCard.classList.contains('instructor-card')) return;
 
     if (checkboxEl.checked) {
-      const prevUnitSelect = prevCard.querySelector('.field-unit');
-      const currentUnitSelect = currentCard.querySelector('.field-unit');
-      currentUnitSelect.value = prevUnitSelect.value;
-      handleUnitChange(currentUnitSelect);
+      const prevManager = prevCard.querySelector('.field-manager');
+      const curManager = currentCard.querySelector('.field-manager');
+      if (prevManager && curManager && !curManager.readOnly) {
+        curManager.value = prevManager.value;
+        clearError(curManager);
+      }
 
-      currentCard.querySelector('.field-altar').value = prevCard.querySelector('.field-altar').value;
+      const curAltar = currentCard.querySelector('.field-altar');
+      curAltar.value = prevCard.querySelector('.field-altar').value;
+      clearError(curAltar);
 
       const prevCat = prevCard.querySelector('input[name^="category_"]:checked');
       if (prevCat) {
         const targetRadio = currentCard.querySelector(`input[name^="category_"][value="${prevCat.value}"]`);
-        if (targetRadio) targetRadio.checked = true;
+        if (targetRadio) { targetRadio.checked = true; clearError(targetRadio); }
       }
 
       const prevLoc = prevCard.querySelector('input[name^="location_"]:checked');
       if (prevLoc) {
         const targetRadio = currentCard.querySelector(`input[name^="location_"][value="${prevLoc.value}"]`);
-        if (targetRadio) targetRadio.checked = true;
+        if (targetRadio) { targetRadio.checked = true; clearError(targetRadio); }
       }
     }
   }
@@ -532,13 +1274,60 @@
     addInstructorCard();
   }
 
-  initForm();
+  function validateForm() {
+    let isValid = true;
+    let firstErrorElement = null;
+    const cards = document.querySelectorAll('.instructor-card');
 
+    cards.forEach(card => {
+      const uid = card.id.replace('card-', '');
+
+      const checkField = (selector, condition) => {
+        const group = card.querySelector(selector);
+        if (!group) return;
+        if (!condition()) {
+          group.classList.add('has-error');
+          isValid = false;
+          if (!firstErrorElement) firstErrorElement = group;
+        } else {
+          group.classList.remove('has-error');
+        }
+      };
+
+      checkField('[data-field="name"]', () => card.querySelector('.field-name').value.trim() !== '');
+      checkField('[data-field="gender"]', () => card.querySelector(`input[name="gender_${uid}"]:checked`) !== null);
+      checkField('[data-field="birthYear"]', () => /^[12][0-9]{3}$/.test(card.querySelector('.field-birthYear').value.trim()));
+      checkField('[data-field="appointedYear"]', () => /^[12][0-9]{3}$/.test(card.querySelector('.field-appointedYear').value.trim()));
+      checkField('[data-field="category"]', () => card.querySelector(`input[name="category_${uid}"]:checked`) !== null);
+      checkField('[data-field="manager"]', () => card.querySelector('.field-manager').value.trim() !== '');
+      checkField('[data-field="altar"]', () => card.querySelector('.field-altar').value.trim() !== '');
+      checkField('[data-field="location"]', () => card.querySelector(`input[name="location_${uid}"]:checked`) !== null);
+      checkField('[data-field="courses"]', () => card.querySelectorAll(`input[name="courses_${uid}"]:checked`).length > 0);
+      checkField('[data-field="mobile"]', () => /^09[0-9]{8}$/.test(card.querySelector('.field-mobile').value.trim()));
+      checkField('[data-field="address"]', () => card.querySelector('.field-address').value.trim() !== '');
+    });
+
+    if (!isValid && firstErrorElement) {
+      firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const focusTarget = firstErrorElement.querySelector('input, select');
+      if (focusTarget) focusTarget.focus();
+    }
+    return isValid;
+  }
+
+  // 送出表單
   document.getElementById('mainForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const btnSubmit = document.getElementById('btnSubmit');
-    const status = document.getElementById('status');
 
+    if (!verifiedEmail || !authToken || !verifiedUnit) {
+      alert('請先在上方完成單位與窗口驗證登入！');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!validateForm()) return;
+
+    const btnSubmit = document.getElementById('btnSubmit');
     const cards = document.querySelectorAll('.instructor-card');
     const instructors = [];
 
@@ -555,7 +1344,7 @@
         birthYear: card.querySelector('.field-birthYear').value.trim(),
         appointedYear: card.querySelector('.field-appointedYear').value.trim(),
         category: catEl ? catEl.value : '',
-        unit: card.querySelector('.field-unit').value.trim(),
+        unit: verifiedUnit,
         manager: card.querySelector('.field-manager').value.trim(),
         altar: card.querySelector('.field-altar').value.trim(),
         location: locEl ? locEl.value : '',
@@ -567,30 +1356,36 @@
     });
 
     btnSubmit.disabled = true;
-    btnSubmit.innerText = '資料傳送中，請稍候...';
-    status.innerText = '';
+    btnSubmit.innerText = '資料傳送與寄件中，請稍候...';
 
     try {
-      await fetch(SCRIPT_URL, {
+      const resp = await fetch(SCRIPT_URL, {
         method: 'POST',
-        mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ instructors: instructors })
+        body: JSON.stringify({
+          action: 'submitForm',
+          email: verifiedEmail,
+          unit: verifiedUnit,
+          token: authToken,
+          instructors: instructors
+        })
       });
 
-      alert(`報名成功！已完成 ${instructors.length} 位講師資料登記。`);
-      document.getElementById('mainForm').reset();
-      initForm();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const res = await resp.json();
+      if (res.result === 'success') {
+        alert(`報名/修改成功！已完成 ${instructors.length} 位講師登記，確認信件已同步寄至 ${verifiedEmail}。`);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        collapseAuthSection(`✔ 【${verifiedUnit}】資料已於 ${new Date().toLocaleTimeString()} 儲存成功，確認信件已送出。`);
+      } else {
+        alert('儲存失敗：' + (res.message || '未知錯誤'));
+      }
     } catch (err) {
-      status.innerText = '報名失敗，請檢查網路連線或稍後再試。';
-      status.style.color = '#b91c1c';
+      alert('連線失敗，請檢查網路連線後再試。');
     } finally {
       btnSubmit.disabled = false;
-      btnSubmit.innerText = '確認並送出報名';
+      btnSubmit.innerText = '確認並送出報名資料';
     }
   });
 </script>
-
 </body>
 </html>
