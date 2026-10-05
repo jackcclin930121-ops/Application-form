@@ -6,14 +6,15 @@
   <title>2027經典師資培訓報名表</title>
   <style>
     :root {
-      --primary: #1e3a8a;
-      --primary-hover: #1e40af;
-      --accent: #2563eb;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --border: #cbd5e1;
-      --text-main: #0f172a;
-      --text-sub: #475569;
+      /* 水墨風配色 */
+      --primary: #333333;        /* 主色改為深墨色 */
+      --primary-hover: #000000;  /* 懸停改為純黑 */
+      --accent: #9e2a2b;         /* 強調色改為硃砂紅 (印章色) */
+      --bg: #f4f0e6;             /* 網頁底色改為宣紙色 */
+      --card-bg: rgba(255, 255, 255, 0.85); /* 卡片改為 85% 半透明，讓水墨背景透出 */
+      --border: #dcd3c6;         /* 稍深的宣紙色邊框 */
+      --text-main: #2b2b2b;      /* 文字使用墨灰色，比純黑柔和 */
+      --text-sub: #595959;       /* 淡墨色 */
       --radius: 12px;
       --error: #dc2626;
       --error-bg: #fef2f2;
@@ -31,6 +32,7 @@
       padding: 32px 18px 320px;
       font-size: 17px;
       line-height: 1.65;
+   
     }
 
     .container { max-width: 760px; margin: 0 auto; }
@@ -98,11 +100,13 @@
     /* 頂部標題與通用卡片 */
     .header-card, .auth-card, .instructor-card {
       background: var(--card-bg);
+      backdrop-filter: blur(5px);      /* 新增毛玻璃效果 */
+      -webkit-backdrop-filter: blur(5px);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 28px 30px;
       margin-bottom: 24px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* 稍微加深陰影讓卡片浮現 */
     }
 
     h1 {
@@ -181,19 +185,45 @@
 
     /* 窗口認證卡片 */
     .auth-card {
-      border: 2px solid #bfdbfe;
-      background: #fbfdff;
+      border: 2px solid var(--border); /* 改為柔和的宣紙邊框 */
+      background: var(--card-bg);      /* 套用半透明變數 */
+      backdrop-filter: blur(5px);      /* 加入淡淡的毛玻璃模糊效果 */
+      -webkit-backdrop-filter: blur(5px);
       transition: all 0.3s ease;
+    }
+
+    .auth-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
     }
 
     .auth-title {
       font-size: 1.25rem;
       font-weight: 800;
       color: var(--primary);
-      margin-bottom: 16px;
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    .btn-admin-bypass {
+      background: #f8fafc;
+      border: 1px dashed #94a3b8;
+      color: #64748b;
+      font-size: 0.82rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-admin-bypass:hover {
+      background: #eff6ff;
+      color: var(--accent);
+      border-color: var(--accent);
     }
 
     .auth-row {
@@ -587,7 +617,7 @@
 <div class="container">
   <div class="header-card">
     <h1>2027經典師資培訓報名表</h1>
-    <div class="subtitle">請填寫完整資訊以利後續班程與師資安排</div>
+    <div class="subtitle">請填寫完整資訊以利後續班程安排</div>
     
     <div class="notice-card">
       <div class="notice-title">📌 報名注意事項</div>
@@ -609,7 +639,11 @@
 
   <!-- Gmail 認證與單位綁定區塊 -->
   <div class="auth-card" id="authCard">
-    <div class="auth-title" id="authHeaderTitle">🔐 單位窗口身分確認與登入</div>
+    <div class="auth-title-row" id="authHeaderTitleRow">
+      <div class="auth-title" id="authHeaderTitle">🔐 單位窗口身分確認與登入</div>
+      <!-- 管理員快速檢視按鈕 -->
+      <button type="button" class="btn-admin-bypass" onclick="adminQuickBypass()">🛠 管理員測試</button>
+    </div>
 
     <!-- 輸入區塊（登入成功後收合隱藏） -->
     <div id="authFieldsContainer">
@@ -635,6 +669,7 @@
           <option value="武聖慧繼">武聖慧繼</option>
           <option value="武聖義真">武聖義真</option>
           <option value="武聖忠義">武聖忠義</option>
+          <option value="林口慈慧">林口慈慧</option>
           <option value="板橋慈惠">板橋慈惠</option>
           <option value="峨眉">峨眉</option>
           <option value="國姓懿德">國姓懿德</option>
@@ -656,7 +691,8 @@
           <option value="易德彌勒">易德彌勒</option>
           <option value="易德文化">易德文化</option>
           <option value="易德忠德">易德忠德</option>
-          <option value="易德翁玉">易德翁玉</option>
+          <option value="易德翕玉">易德翕玉</option>
+          <option value="德化天樂">德化天樂</option>
           <option value="德化文德">德化文德</option>
           <option value="德宣">德宣</option>
           <option value="聚德">聚德</option>
@@ -705,7 +741,7 @@
       <div class="reminder-card">
         <div class="reminder-title">🌿 溫馨提醒</div>
         <ol class="reminder-list">
-          <li>2027年度經典班培訓內容為<strong>《大學、白陽聖訓》</strong>，培訓地點：北部(靈隱寺)及中部(武聖宮)。</li>
+          <li>2027年度經典班培訓內容為<strong>《大學證釋暨白陽聖訓》</strong>，培訓地點：北部(靈隱寺)及中部(武聖宮)。</li>
           <li>開課日：<span class="hl-badge">2027年2月27日起</span>，每月第四週六進行。</li>
           <li>各設班佛堂至少三位推薦講師，接受中心排課，推薦講師出席率將影響設班資格。</li>
           <li>經典班操持、個別講師，<span class="hl-danger">未能全程參與者，請勿報名</span>。</li>
@@ -740,19 +776,21 @@
     '道恩': '王錦雀',
     '三重懿德': '周清美',
     '慈明真善': '鄧月枝',
-    '慈明天慈': '藍銹女',
+    '慈明天慈': '藍綉女',
     '慈明懷濟': '黃淑雲',
     '慈明永仁': '林秀春',
     '慈明忠恕': '呂文慧',
     '慈明興德': '吳美惠',
-    '慈明慈恩': '陳新坤',
+    '慈明慈恩': '', // 保留讓該單位自填
     '慈正': '顏月招',
-    '慈愛': '潘是覦',
+    '慈愛': '潘昰覦',
+    '德化天樂': '陳榮惠',
     '德化文德': '陳雅湶',
     '峨眉': '蔡韶悅',
     '善生': '廖花',
     '協和': '盧春財',
     '玄恩': '陳美蓮',
+    '林口慈慧': '孔淑貞',
     '武聖道合': '陳平田',
     '武聖元妙': '張茂癸',
     '武聖忠孝': '張瑞嬌',
@@ -769,13 +807,15 @@
     '易德彌勒': '林順',
     '易德文化': '林菊',
     '易德忠德': '洪牡丹',
-    '易德翁玉': '張美英',
+    '易德翕玉': '張美英',
+    '道宣': '陳慧鈴',
     '永誠': '黃秀霞',
     '板橋慈惠': '李焜照',
     '聚德': '游進福',
     '國姓懿德': '陳秀明',
     '德宣': '黃用臧',
     '淨心': '周榮輝',
+    '化星': '蕭振華',
     '天濟': '謝耀宏'
   };
 
@@ -792,6 +832,31 @@
   let verifiedEmail = "";
   let verifiedUnit = "";
   let authToken = "";
+
+  // 管理員快速通關功能
+  function adminQuickBypass() {
+    const key = prompt('請輸入管理員測試金鑰：');
+    if (key === null) return;
+    if (key.trim() === '930121') {
+      const unitSelect = document.getElementById('authUnit');
+      let chosenUnit = unitSelect.value;
+      if (!chosenUnit) {
+        chosenUnit = '和宣'; // 若未選擇預設帶入第一間單位方便檢視
+        unitSelect.value = chosenUnit;
+      }
+
+      verifiedEmail = 'admin-tester@preview.local';
+      verifiedUnit = chosenUnit;
+      authToken = 'ADMIN_PREVIEW_TOKEN_BYPASS';
+
+      collapseAuthSection(`🛠 管理員模式預覽中！已代表【${chosenUnit}】跳過驗證載入表單。`);
+      document.getElementById('formSection').style.display = 'block';
+      startSessionTimer();
+      initForm();
+    } else {
+      alert('金鑰錯誤，無法跳過驗證！');
+    }
+  }
 
   // 1. 發送驗證碼
   async function sendOtp() {
@@ -894,7 +959,7 @@
   // 簡化登入區塊
   function collapseAuthSection(successText) {
     baseLoginMessage = successText;
-    document.getElementById('authHeaderTitle').style.display = 'none';
+    document.getElementById('authHeaderTitleRow').style.display = 'none';
     document.getElementById('authFieldsContainer').style.display = 'none';
     
     const statusEl = document.getElementById('authStatus');
@@ -1010,7 +1075,7 @@
   // 重置回登入表單
   function resetAuthSection() {
     stopSessionTimer();
-    document.getElementById('authHeaderTitle').style.display = 'flex';
+    document.getElementById('authHeaderTitleRow').style.display = 'flex';
     document.getElementById('authFieldsContainer').style.display = 'block';
     document.getElementById('authStatus').style.display = 'none';
     
@@ -1051,7 +1116,11 @@
       currentCard.querySelector('.field-name').value = inst.name || '';
       currentCard.querySelector('.field-birthYear').value = inst.birthYear || '';
       currentCard.querySelector('.field-appointedYear').value = inst.appointedYear || '';
-      currentCard.querySelector('.field-manager').value = inst.manager || '';
+      
+      if (inst.manager !== undefined && inst.manager !== null) {
+        currentCard.querySelector('.field-manager').value = inst.manager;
+      }
+      
       currentCard.querySelector('.field-altar').value = inst.altar || '';
       currentCard.querySelector('.field-mobile').value = inst.mobile || '';
       currentCard.querySelector('.field-tel').value = inst.tel || '';
