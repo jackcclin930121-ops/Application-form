@@ -1440,7 +1440,9 @@
         alert(`報名/修改成功！已完成 ${instructors.length} 位講師登記，確認信件已同步寄至 ${verifiedEmail}。`);
         window.scrollTo({ top: 0, behavior: 'smooth' });
         collapseAuthSection(`✔ 【${verifiedUnit}】資料已於 ${new Date().toLocaleTimeString()} 儲存成功，確認信件已送出。`);
-      } else {
+        initForm();
+      } 
+      else {
         alert('儲存失敗：' + (res.message || '未知錯誤'));
       }
     } catch (err) {
