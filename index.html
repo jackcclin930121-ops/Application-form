@@ -814,6 +814,45 @@
     }
   }
 
+  // ★ 新增：檢查該單位是否已經綁定，並顯示遮罩提示
+  async function checkUnitBinding() {
+    const unitSelect = document.getElementById('authUnit');
+    const nameInput = document.getElementById('authName');
+    const emailInput = document.getElementById('authEmail');
+    const unit = unitSelect.value;
+    
+    if (!unit) return;
+
+    // 每次選擇單位時先清空現有輸入，並顯示查詢中狀態
+    nameInput.value = '';
+    emailInput.value = '';
+    nameInput.placeholder = '🔍 查詢狀態中...';
+    emailInput.placeholder = '🔍 查詢狀態中...';
+
+    try {
+      const resp = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'checkBinding', unit: unit })
+      });
+      const data = await resp.json();
+
+      if (data.result === 'success' && data.bound) {
+        // 如果已經綁定過，將 placeholder 變更為遮罩文字
+        nameInput.placeholder = `已註冊窗口：${data.maskedName}`;
+        emailInput.placeholder = `已綁定信箱：${data.maskedEmail}`;
+      } else {
+        // 如果還沒註冊，提示使用者輸入
+        nameInput.placeholder = '該單位尚未註冊，請輸入您的姓名';
+        emailInput.placeholder = '該單位尚未註冊，請輸入您的 Email';
+      }
+    } catch (err) {
+      // 若網路異常或錯誤，恢復預設提示字
+      nameInput.placeholder = '例：王大明';
+      emailInput.placeholder = '例：example@gmail.com';
+    }
+  }
+
   async function sendOtp() {
     const unitSelect = document.getElementById('authUnit');
     const nameInput = document.getElementById('authName');
@@ -1040,9 +1079,16 @@
     const btnSend = document.getElementById('btnSendOtp');
 
     unitSelect.disabled = false;
+    unitSelect.value = ''; // 登出時順便重設下拉選單
+
     nameInput.readOnly = false;
     nameInput.value = '';
+    nameInput.placeholder = '例：王大明'; // ★ 恢復預設提示
+
     emailInput.readOnly = false;
+    emailInput.value = '';
+    emailInput.placeholder = '例：example@gmail.com'; // ★ 恢復預設提示
+
     btnSend.disabled = false;
     btnSend.innerText = '發送驗證碼';
 
