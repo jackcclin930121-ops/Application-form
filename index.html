@@ -6,15 +6,14 @@
   <title>2027經典師資培訓報名表</title>
   <style>
     :root {
-      /* 水墨風配色 */
-      --primary: #333333;        /* 主色改為深墨色 */
-      --primary-hover: #000000;  /* 懸停改為純黑 */
-      --accent: #9e2a2b;         /* 強調色改為硃砂紅 (印章色) */
-      --bg: #f4f0e6;             /* 網頁底色改為宣紙色 */
-      --card-bg: rgba(255, 255, 255, 0.85); /* 卡片改為 85% 半透明，讓水墨背景透出 */
-      --border: #dcd3c6;         /* 稍深的宣紙色邊框 */
-      --text-main: #2b2b2b;      /* 文字使用墨灰色，比純黑柔和 */
-      --text-sub: #595959;       /* 淡墨色 */
+      --primary: #333333;
+      --primary-hover: #000000;
+      --accent: #9e2a2b;
+      --bg: #f4f0e6;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --border: #dcd3c6;
+      --text-main: #2b2b2b;
+      --text-sub: #595959;
       --radius: 12px;
       --error: #dc2626;
       --error-bg: #fef2f2;
@@ -32,12 +31,10 @@
       padding: 32px 18px 320px;
       font-size: 17px;
       line-height: 1.65;
-   
     }
 
     .container { max-width: 760px; margin: 0 auto; }
 
-    /* 右上角懸浮倒數計時膠囊 */
     #floatingTimer {
       display: none;
       position: fixed;
@@ -97,16 +94,16 @@
       border-color: #fca5a5;
     }
 
-    /* 頂部標題與通用卡片 */
     .header-card, .auth-card, .instructor-card {
       background: var(--card-bg);
-      backdrop-filter: blur(5px);      /* 新增毛玻璃效果 */
+      backdrop-filter: blur(5px);
       -webkit-backdrop-filter: blur(5px);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 28px 30px;
       margin-bottom: 24px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* 稍微加深陰影讓卡片浮現 */
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
     }
 
     h1 {
@@ -126,7 +123,6 @@
       font-weight: 500;
     }
 
-    /* 注意事項區塊 */
     .notice-card {
       background-color: #f8fafc;
       border-left: 5px solid var(--accent);
@@ -183,13 +179,8 @@
       font-weight: 700;
     }
 
-    /* 窗口認證卡片 */
     .auth-card {
-      border: 2px solid var(--border); /* 改為柔和的宣紙邊框 */
-      background: var(--card-bg);      /* 套用半透明變數 */
-      backdrop-filter: blur(5px);      /* 加入淡淡的毛玻璃模糊效果 */
-      -webkit-backdrop-filter: blur(5px);
-      transition: all 0.3s ease;
+      border: 2px solid var(--border);
     }
 
     .auth-title-row {
@@ -265,7 +256,6 @@
 
     .btn-secondary:disabled { cursor: not-allowed; opacity: 0.6; }
 
-    /* 認證內崁狀態列 */
     .auth-status-bar {
       font-size: 1rem;
       font-weight: 600;
@@ -308,7 +298,6 @@
     }
     .btn-relogin:hover { background: #f8fafc; border-color: #94a3b8; }
 
-    /* 主表單區域 */
     #formSection {
       display: none;
       animation: fadeIn 0.3s ease-in-out;
@@ -333,6 +322,13 @@
     .instructor-card {
       border: 1.5px solid #cbd5e1;
       animation: fadeIn 0.25s ease-in-out;
+    }
+
+    /* 錯誤標示時的卡片特效 */
+    .instructor-card.has-error {
+      border: 2.5px solid var(--error);
+      box-shadow: 0 0 15px rgba(220, 38, 38, 0.25);
+      animation: shake 0.3s ease-in-out;
     }
 
     @keyframes fadeIn {
@@ -495,7 +491,6 @@
       cursor: pointer;
     }
 
-    /* 溫馨提醒卡片 */
     .reminder-card {
       background: #fffbeb;
       border: 1.5px solid #fde68a;
@@ -547,7 +542,6 @@
 
     .phone-link:hover { text-decoration: underline; }
 
-    /* 按鈕樣式 */
     .btn-add {
       width: 100%;
       height: 52px;
@@ -608,7 +602,6 @@
 </head>
 <body>
 
-<!-- 右上角懸浮倒數計時膠囊 -->
 <div id="floatingTimer" onclick="resetSessionActivity()" title="點擊即可重置延長 3 分鐘">
   <span id="floatingTimerText">⏳ 倒數 03:00</span>
   <button type="button" class="float-logout-btn" onclick="event.stopPropagation(); manualLogout();">登出</button>
@@ -637,21 +630,17 @@
     </div>
   </div>
 
-  <!-- Gmail 認證與單位綁定區塊 -->
   <div class="auth-card" id="authCard">
     <div class="auth-title-row" id="authHeaderTitleRow">
       <div class="auth-title" id="authHeaderTitle">🔐 單位窗口身分確認與登入</div>
-      <!-- 管理員快速檢視按鈕 -->
       <button type="button" class="btn-admin-bypass" onclick="adminQuickBypass()">🛠 管理員測試</button>
     </div>
 
-    <!-- 輸入區塊（登入成功後收合隱藏） -->
     <div id="authFieldsContainer">
       <div class="auth-row">
         <label class="auth-label">1. 請選擇您代表報名的所屬單位<span style="color:#e11d48;">*</span></label>
         <select id="authUnit" class="field-select">
           <option value="" disabled selected>請選擇所屬單位</option>
-          <!-- 依中文筆畫順序排列（首字 3 劃至 21 劃） -->
           <option value="三重懿德">三重懿德</option>
           <option value="天濟">天濟</option>
           <option value="玄恩">玄恩</option>
@@ -699,8 +688,16 @@
         </select>
       </div>
       
+      <!-- 新增：單位窗口姓名 -->
       <div class="auth-row">
-        <label class="auth-label">2. 請輸入單位窗口 Gmail 信箱<span style="color:#e11d48;">*</span></label>
+        <label class="auth-label">2. 請輸入單位窗口姓名<span style="color:#e11d48;">*</span></label>
+        <div class="auth-input-group">
+          <input type="text" id="authName" placeholder="例：王大明" style="flex: 1; min-width: 220px;">
+        </div>
+      </div>
+
+      <div class="auth-row">
+        <label class="auth-label">3. 請輸入單位窗口 Gmail 信箱<span style="color:#e11d48;">*</span></label>
         <div class="auth-input-group">
           <input type="email" id="authEmail" placeholder="例：example@gmail.com" style="flex: 1; min-width: 220px;">
           <button type="button" class="btn-secondary" id="btnSendOtp" onclick="sendOtp()">發送驗證碼</button>
@@ -708,7 +705,7 @@
       </div>
 
       <div class="auth-row" id="otpSection" style="display: none;">
-        <label class="auth-label">3. 請輸入信件中的 6 位數驗證碼</label>
+        <label class="auth-label">4. 請輸入信件中的 6 位數驗證碼</label>
         <div class="auth-input-group">
           <input type="text" id="authOtp" placeholder="請輸入 6 位數驗證碼" maxlength="6" inputmode="numeric" style="flex: 1;">
           <button type="button" class="btn-secondary" id="btnVerifyOtp" onclick="verifyOtp()">驗證並進入表單</button>
@@ -716,14 +713,11 @@
       </div>
     </div>
 
-    <!-- 狀態列（登入成功後保留此區顯示單位資訊） -->
     <div id="authStatus" class="auth-status-bar"></div>
   </div>
 
-  <!-- 主表單（未認證前隱藏，登入後才顯示） -->
   <div id="formSection">
     
-    <!-- 登入後才出現的填表提醒 -->
     <div class="form-tips-card">
       <strong>📝 講師資料填寫須知：</strong>
       <ul>
@@ -735,9 +729,8 @@
     <form id="mainForm" novalidate>
       <div id="instructorsContainer"></div>
 
-      <button type="button" id="btnAddInstructor" class="btn-add" onclick="addInstructorCard()">＋ 新增下一位講師</button>
+      <button type="button" id="btnAddInstructor" class="btn-add" onclick="addInstructorCard()">＋ 新增講師</button>
 
-      <!-- 溫馨提醒區塊 -->
       <div class="reminder-card">
         <div class="reminder-title">🌿 溫馨提醒</div>
         <ol class="reminder-list">
@@ -748,7 +741,7 @@
           <li>
             參與培訓講師注意事項：
             <ul class="reminder-sub-list">
-              <li>(1) 請於當日 <strong>07:30 以前完成報到</strong>，超過時間者，不得掛號參班，事先電話知會者除外。</li>
+              <li>(1) 請於當日 <strong>07:30 以前完成報到</strong>，超過時間者，均記以遲到。</li>
               <li>(2) 請假：除靈隱中心道務需要奉派出國外，因個人因素或是地區道務需求，請假次數以<strong class="hl-danger">二次為限</strong>；所有師資皆比照此規定，超過次數者即自動退訓，請謹守班規。</li>
               <li>(3) 本班程<strong>不開放旁聽</strong>。</li>
             </ul>
@@ -767,59 +760,25 @@
 </div>
 
 <script>
+  // ★★★ 請務必在此填寫您的 Web App URL ★★★
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSc4afS0jDTvVefP36WtGD-dUl3H7hU70mgS3ZXhf72joAIqvkjLvw0pQNoGVARPvC/exec';
 
   const COURSE_OPTIONS = ['明德班', '新民班', '至善班', '經典班', '無講授經驗'];
 
   const UNIT_MANAGER_MAP = {
-    '和宣': '吳月春',
-    '道恩': '王錦雀',
-    '三重懿德': '周清美',
-    '慈明真善': '鄧月枝',
-    '慈明天慈': '藍綉女',
-    '慈明懷濟': '黃淑雲',
-    '慈明永仁': '林秀春',
-    '慈明忠恕': '呂文慧',
-    '慈明興德': '吳美惠',
-    '慈明慈恩': '', // 保留讓該單位自填
-    '慈正': '顏月招',
-    '慈愛': '潘昰覦',
-    '德化天樂': '陳榮惠',
-    '德化文德': '陳雅湶',
-    '峨眉': '蔡韶悅',
-    '善生': '廖花',
-    '協和': '盧春財',
-    '玄恩': '陳美蓮',
-    '林口慈慧': '孔淑貞',
-    '武聖道合': '陳平田',
-    '武聖元妙': '張茂癸',
-    '武聖忠孝': '張瑞嬌',
-    '武聖旭德': '洪秀旭',
-    '武聖善化': '施金杰',
-    '武聖慧恩': '陳婕穎',
-    '武聖慧繼': '張文鳳',
-    '武聖義真': '蘇冊',
-    '武聖忠義': '王振興',
-    '聖德': '汪志冀',
-    '永合': '董光雄',
-    '慈聖': '李秋香',
-    '弘德': '董招賢',
-    '易德彌勒': '林順',
-    '易德文化': '林菊',
-    '易德忠德': '洪牡丹',
-    '易德翕玉': '張美英',
-    '道宣': '陳慧鈴',
-    '永誠': '黃秀霞',
-    '板橋慈惠': '李焜照',
-    '聚德': '游進福',
-    '國姓懿德': '陳秀明',
-    '德宣': '黃用臧',
-    '淨心': '周榮輝',
-    '化星': '蕭振華',
-    '天濟': '謝耀宏'
+    '和宣': '吳月春', '道恩': '王錦雀', '三重懿德': '周清美', '慈明真善': '鄧月枝',
+    '慈明天慈': '藍綉女', '慈明懷濟': '黃淑雲', '慈明永仁': '林秀春', '慈明忠恕': '呂文慧',
+    '慈明興德': '吳美惠', '慈明慈恩': '', '慈正': '顏月招', '慈愛': '潘昰覦',
+    '德化天樂': '陳榮惠', '德化文德': '陳雅湶', '峨眉': '蔡韶悅', '善生': '廖花',
+    '協和': '盧春財', '玄恩': '陳美蓮', '林口慈慧': '孔淑貞', '武聖道合': '陳平田',
+    '武聖元妙': '張茂癸', '武聖忠孝': '張瑞嬌', '武聖旭德': '洪秀旭', '武聖善化': '施金杰',
+    '武聖慧恩': '陳婕穎', '武聖慧繼': '張文鳳', '武聖義真': '蘇冊', '武聖忠義': '王振興',
+    '聖德': '汪志冀', '永合': '董光雄', '慈聖': '李秋香', '弘德': '董招賢',
+    '易德彌勒': '林順', '易德文化': '林菊', '易德忠德': '洪牡丹', '易德翕玉': '張美英',
+    '道宣': '陳慧鈴', '永誠': '黃秀霞', '板橋慈惠': '李焜照', '聚德': '游進福',
+    '國姓懿德': '陳秀明', '德宣': '黃用臧', '淨心': '周榮輝', '化星': '蕭振華', '天濟': '謝耀宏'
   };
 
-  // 登入狀態與逾時設定（3 分鐘 = 180 秒，停止操作 10 秒後開始倒數）
   const SESSION_TIMEOUT_SECONDS = 180;
   const IDLE_WAIT_SECONDS = 10;
   let remainingSeconds = SESSION_TIMEOUT_SECONDS;
@@ -833,7 +792,6 @@
   let verifiedUnit = "";
   let authToken = "";
 
-  // 管理員快速通關功能
   function adminQuickBypass() {
     const key = prompt('請輸入管理員測試金鑰：');
     if (key === null) return;
@@ -841,14 +799,12 @@
       const unitSelect = document.getElementById('authUnit');
       let chosenUnit = unitSelect.value;
       if (!chosenUnit) {
-        chosenUnit = '和宣'; // 若未選擇預設帶入第一間單位方便檢視
+        chosenUnit = '和宣'; 
         unitSelect.value = chosenUnit;
       }
-
       verifiedEmail = 'admin-tester@preview.local';
       verifiedUnit = chosenUnit;
       authToken = 'ADMIN_PREVIEW_TOKEN_BYPASS';
-
       collapseAuthSection(`🛠 管理員模式預覽中！已代表【${chosenUnit}】跳過驗證載入表單。`);
       document.getElementById('formSection').style.display = 'block';
       startSessionTimer();
@@ -858,17 +814,23 @@
     }
   }
 
-  // 1. 發送驗證碼
   async function sendOtp() {
     const unitSelect = document.getElementById('authUnit');
+    const nameInput = document.getElementById('authName');
     const emailInput = document.getElementById('authEmail');
     const unit = unitSelect.value;
+    const windowName = nameInput.value.trim();
     const email = emailInput.value.trim().toLowerCase();
     const btn = document.getElementById('btnSendOtp');
 
     if (!unit) {
       showAuthStatus('請先選擇所屬單位！', 'error');
       unitSelect.focus();
+      return;
+    }
+    if (!windowName) {
+      showAuthStatus('請輸入窗口姓名！', 'error');
+      nameInput.focus();
       return;
     }
     if (!email || !email.endsWith('@gmail.com')) {
@@ -885,7 +847,7 @@
       const resp = await fetch(SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'sendOTP', unit: unit, email: email })
+        body: JSON.stringify({ action: 'sendOTP', unit: unit, email: email, name: windowName })
       });
       const data = await resp.json();
 
@@ -893,6 +855,7 @@
         showAuthStatus(`驗證碼已寄至 ${email}，請於 10 分鐘內查收並輸入。`, 'success');
         document.getElementById('otpSection').style.display = 'block';
         unitSelect.disabled = true;
+        nameInput.readOnly = true;
         emailInput.readOnly = true;
         btn.innerText = '已寄送';
       } else {
@@ -907,9 +870,9 @@
     }
   }
 
-  // 2. 驗證 OTP
   async function verifyOtp() {
     const unit = document.getElementById('authUnit').value;
+    const windowName = document.getElementById('authName').value.trim();
     const email = document.getElementById('authEmail').value.trim().toLowerCase();
     const otp = document.getElementById('authOtp').value.trim();
     const btn = document.getElementById('btnVerifyOtp');
@@ -926,7 +889,7 @@
       const resp = await fetch(SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'verifyOTP', unit: unit, email: email, otp: otp })
+        body: JSON.stringify({ action: 'verifyOTP', unit: unit, email: email, name: windowName, otp: otp })
       });
       const data = await resp.json();
 
@@ -935,7 +898,7 @@
         verifiedUnit = unit;
         authToken = data.token;
 
-        collapseAuthSection(`✔ 身分驗證成功！已代表【${unit}】 登入。`);
+        collapseAuthSection(`✔ 身分驗證成功！已代表【${unit}】 (窗口：${windowName}) 登入。`);
         document.getElementById('formSection').style.display = 'block';
         startSessionTimer();
 
@@ -956,7 +919,6 @@
     }
   }
 
-  // 簡化登入區塊
   function collapseAuthSection(successText) {
     baseLoginMessage = successText;
     document.getElementById('authHeaderTitleRow').style.display = 'none';
@@ -971,7 +933,6 @@
     statusEl.style.display = 'flex';
   }
 
-  // 更新右上角懸浮窗文字與樣式
   function updateFloatingTimerDisplay() {
     const timerBox = document.getElementById('floatingTimer');
     const timerText = document.getElementById('floatingTimerText');
@@ -994,7 +955,6 @@
     }
   }
 
-  // 啟動會話監聽
   function startSessionTimer() {
     stopSessionTimer();
     const timerBox = document.getElementById('floatingTimer');
@@ -1006,7 +966,6 @@
     });
   }
 
-  // 使用者有操作：暫停倒數，並設定 10 秒後重啟倒數
   function resetSessionActivity() {
     if (!authToken) return;
 
@@ -1022,7 +981,6 @@
       clearTimeout(idleStartTimeout);
     }
 
-    // 停止操作 10 秒後才開始倒數
     idleStartTimeout = setTimeout(() => {
       isCountingDown = true;
       updateFloatingTimerDisplay();
@@ -1056,7 +1014,6 @@
     });
   }
 
-  // 逾時處理
   function handleSessionTimeout() {
     stopSessionTimer();
     resetAuthSection();
@@ -1064,7 +1021,6 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // 手動登出
   function manualLogout() {
     if (confirm('確定要登出並切換帳號嗎？尚未送出的修改將不會被保存。')) {
       stopSessionTimer();
@@ -1072,7 +1028,6 @@
     }
   }
 
-  // 重置回登入表單
   function resetAuthSection() {
     stopSessionTimer();
     document.getElementById('authHeaderTitleRow').style.display = 'flex';
@@ -1080,10 +1035,13 @@
     document.getElementById('authStatus').style.display = 'none';
     
     const unitSelect = document.getElementById('authUnit');
+    const nameInput = document.getElementById('authName');
     const emailInput = document.getElementById('authEmail');
     const btnSend = document.getElementById('btnSendOtp');
 
     unitSelect.disabled = false;
+    nameInput.readOnly = false;
+    nameInput.value = '';
     emailInput.readOnly = false;
     btnSend.disabled = false;
     btnSend.innerText = '發送驗證碼';
@@ -1279,6 +1237,9 @@
   function clearError(el) {
     const formGroup = el.closest('.form-group');
     if (formGroup) formGroup.classList.remove('has-error');
+    // 也清除可能加在整張卡片上的 has-error
+    const card = el.closest('.instructor-card');
+    if (card) card.classList.remove('has-error');
   }
 
   function reorderCardTitles() {
@@ -1306,14 +1267,12 @@
     }
   }
 
-  // 同步上一位資料：僅同步「所屬經理、設班公壇、培訓地點」
   function toggleCopyPrevious(checkboxEl) {
     const currentCard = checkboxEl.closest('.instructor-card');
     const prevCard = currentCard.previousElementSibling;
     if (!prevCard || !prevCard.classList.contains('instructor-card')) return;
 
     if (checkboxEl.checked) {
-      // 1. 同步所屬經理（若手動填寫單位）
       const prevManager = prevCard.querySelector('.field-manager');
       const curManager = currentCard.querySelector('.field-manager');
       if (prevManager && curManager && !curManager.readOnly) {
@@ -1321,12 +1280,10 @@
         clearError(curManager);
       }
 
-      // 2. 同步設班公壇
       const curAltar = currentCard.querySelector('.field-altar');
       curAltar.value = prevCard.querySelector('.field-altar').value;
       clearError(curAltar);
 
-      // 3. 同步培訓地點
       const prevLoc = prevCard.querySelector('input[name^="location_"]:checked');
       if (prevLoc) {
         const targetRadio = currentCard.querySelector(`input[name^="location_"][value="${prevLoc.value}"]`);
@@ -1386,7 +1343,7 @@
     return isValid;
   }
 
-  // 送出表單
+  // 送出表單 (加入重複姓名檢查)
   document.getElementById('mainForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -1398,10 +1355,45 @@
 
     if (!validateForm()) return;
 
-    const btnSubmit = document.getElementById('btnSubmit');
+    // ★★★ 2. 檢查表單內有無重複相同的講師姓名 ★★★
     const cards = document.querySelectorAll('.instructor-card');
-    const instructors = [];
+    const seenNames = new Map();
+    let hasDuplicate = false;
 
+    for (const card of cards) {
+      const nameInput = card.querySelector('.field-name');
+      const name = nameInput.value.trim();
+      
+      if (seenNames.has(name)) {
+        alert(`您好，【${verifiedUnit}】的「${name}」講師已經有報名過了，請確認後再報名。`);
+        
+        // 標示目前的重複卡片
+        card.classList.add('has-error');
+        nameInput.closest('.form-group').classList.add('has-error');
+        
+        // 平滑滾動至重複卡片位置
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // 將原本已經填寫的另一張卡片也稍微標示
+        const origCard = seenNames.get(name);
+        origCard.classList.add('has-error');
+        
+        // 幾秒後自動清除紅框提示(或使用者輸入時亦會清除)
+        setTimeout(() => {
+          card.classList.remove('has-error');
+          origCard.classList.remove('has-error');
+        }, 4000);
+        
+        hasDuplicate = true;
+        break; // 停止後續發送動作
+      }
+      seenNames.set(name, card);
+    }
+
+    if (hasDuplicate) return;
+
+    // 彙整資料進行發送
+    const instructors = [];
     cards.forEach(card => {
       const uid = card.id.replace('card-', '');
       const courses = Array.from(card.querySelectorAll(`input[name="courses_${uid}"]:checked`)).map(cb => cb.value);
@@ -1426,6 +1418,7 @@
       });
     });
 
+    const btnSubmit = document.getElementById('btnSubmit');
     btnSubmit.disabled = true;
     btnSubmit.innerText = '資料傳送與寄件中，請稍候...';
 
