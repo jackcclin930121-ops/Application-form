@@ -729,7 +729,7 @@
     <form id="mainForm" novalidate>
       <div id="instructorsContainer"></div>
 
-      <button type="button" id="btnAddInstructor" class="btn-add" onclick="addInstructorCard()">＋ 新增講師</button>
+      <button type="button" id="btnAddInstructor" class="btn-add" onclick="addInstructorCard()">＋ 新增下一位講師</button>
 
       <div class="reminder-card">
         <div class="reminder-title">🌿 溫馨提醒</div>
@@ -741,7 +741,7 @@
           <li>
             參與培訓講師注意事項：
             <ul class="reminder-sub-list">
-              <li>(1) 請於當日 <strong>07:30 以前完成報到</strong>，超過時間者，均記以遲到。</li>
+              <li>(1) 請於當日 <strong>07:30 以前完成報到</strong>，超過時間者，不得掛號參班，事先電話知會者除外。</li>
               <li>(2) 請假：除靈隱中心道務需要奉派出國外，因個人因素或是地區道務需求，請假次數以<strong class="hl-danger">二次為限</strong>；所有師資皆比照此規定，超過次數者即自動退訓，請謹守班規。</li>
               <li>(3) 本班程<strong>不開放旁聽</strong>。</li>
             </ul>
@@ -811,45 +811,6 @@
       initForm();
     } else {
       alert('金鑰錯誤，無法跳過驗證！');
-    }
-  }
-
-  // ★ 新增：檢查該單位是否已經綁定，並顯示遮罩提示
-  async function checkUnitBinding() {
-    const unitSelect = document.getElementById('authUnit');
-    const nameInput = document.getElementById('authName');
-    const emailInput = document.getElementById('authEmail');
-    const unit = unitSelect.value;
-    
-    if (!unit) return;
-
-    // 每次選擇單位時先清空現有輸入，並顯示查詢中狀態
-    nameInput.value = '';
-    emailInput.value = '';
-    nameInput.placeholder = '🔍 查詢狀態中...';
-    emailInput.placeholder = '🔍 查詢狀態中...';
-
-    try {
-      const resp = await fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'checkBinding', unit: unit })
-      });
-      const data = await resp.json();
-
-      if (data.result === 'success' && data.bound) {
-        // 如果已經綁定過，將 placeholder 變更為遮罩文字
-        nameInput.placeholder = `已註冊窗口：${data.maskedName}`;
-        emailInput.placeholder = `已綁定信箱：${data.maskedEmail}`;
-      } else {
-        // 如果還沒註冊，提示使用者輸入
-        nameInput.placeholder = '該單位尚未註冊，請輸入您的姓名';
-        emailInput.placeholder = '該單位尚未註冊，請輸入您的 Email';
-      }
-    } catch (err) {
-      // 若網路異常或錯誤，恢復預設提示字
-      nameInput.placeholder = '例：王大明';
-      emailInput.placeholder = '例：example@gmail.com';
     }
   }
 
@@ -1079,16 +1040,9 @@
     const btnSend = document.getElementById('btnSendOtp');
 
     unitSelect.disabled = false;
-    unitSelect.value = ''; // 登出時順便重設下拉選單
-
     nameInput.readOnly = false;
     nameInput.value = '';
-    nameInput.placeholder = '例：王大明'; // ★ 恢復預設提示
-
     emailInput.readOnly = false;
-    emailInput.value = '';
-    emailInput.placeholder = '例：example@gmail.com'; // ★ 恢復預設提示
-
     btnSend.disabled = false;
     btnSend.innerText = '發送驗證碼';
 
@@ -1487,8 +1441,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
         collapseAuthSection(`✔ 【${verifiedUnit}】資料已於 ${new Date().toLocaleTimeString()} 儲存成功，確認信件已送出。`);
         initForm();
-      } 
-      else {
+      } else {
         alert('儲存失敗：' + (res.message || '未知錯誤'));
       }
     } catch (err) {
